@@ -1,5 +1,5 @@
-const Migrations = artifacts.require("VoterToken.sol");
+const VoterToken = artifacts.require("VoterToken.sol");
 
 module.exports = function (deployer) {
-  deployer.deploy(VoterToken);
+  deployer.deploy(VoterToken, 'TestToken');
 };
