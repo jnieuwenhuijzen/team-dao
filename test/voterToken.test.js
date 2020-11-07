@@ -56,5 +56,4 @@ contract('VoterToken', function(accounts) {
     assert.equal(balanceAlice, transferAmount, 'Transferred amount for alice is incorrect' + tokenName)
   });
 
-
 })
