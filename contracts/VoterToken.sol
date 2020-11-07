@@ -4,12 +4,54 @@ pragma solidity >=0.6.0 <0.8.0;
 import "./openzeppelin/ERC20Burnable.sol";
 import "./openzeppelin/Ownable.sol";
 
+/// @title A contract for tokenized voting
+/// @author Jarl Nieuwenhuijzen
+/// @notice This contract should be used in conjunction with team-dao
+/// @dev This contract is based on openzeppelin ERC20 contracts with only transferring prerequisites added
 contract VoterToken is ERC20Burnable, Ownable {
-  constructor(string memory name) public ERC20(name, "VOTE") {}
+    uint256 public votingFrom;
+    uint256 public votingUntil;
 
-  function mint(address account, uint256 amount) public onlyOwner {
-    _mint(account, amount);
-  }
+    /// @notice Construct a standard ERC20 token, add voting timeframe
+    /// @param _name A name for this vote
+    /// @param _votingFrom The unix timestamp start of the voting timeframe
+    /// @param _votingUntil The unix timestamp end of the voting timeframe
+    constructor(
+        string memory _name,
+        uint256 _votingFrom,
+        uint256 _votingUntil
+    ) public ERC20(_name, "VOTE") {
+        votingFrom = _votingFrom;
+        votingUntil = _votingUntil;
+    }
 
-  // Transfer, TransferFrom, Burn and Mint should be pausable.
+    /// @notice In preparation of the vote, tokens are distributed (minted) to alleged voters
+    /// @param account The address to whom the voting tokens will be assigned to
+    /// @param amount The amount of voting tokens
+    function mint(address account, uint256 amount) public onlyOwner {
+        _mint(account, amount);
+    }
+
+    /// @notice The function _BeforeTokenTransfer is used to implement the prerequisites
+    /// Transfer is only possible if the vote is in its voting period
+    /// Transfer is only possible if the ownership is renounced (minting no longer possible)
+    /// Minting is possible, until ownership is renounced
+    /// Burning is always possible
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256
+    ) internal override {
+        if (from != address(0) && to != address(0)) {
+            require(owner() == address(0), "Voting contract is still owned!");
+            require(
+                block.timestamp >= votingFrom,
+                "Voting is not yet possible!"
+            );
+            require(
+                block.timestamp <= votingUntil,
+                "Voting is no longer possible!"
+            );
+        }
+    }
 }

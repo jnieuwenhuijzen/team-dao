@@ -13,8 +13,10 @@ contract('VoterToken', function(accounts) {
   const burnAmount = 200
   const transferAmount = 100
 
+  const unixNow = Math.floor(Date.now() / 1000)
+
   beforeEach(async () => {
-    instance = await VoterToken.new(tokenName)
+    instance = await VoterToken.new(tokenName, unixNow, unixNow + 1000)
   })
 
   it("should return the correct name of the token", async () => {
@@ -28,7 +30,8 @@ contract('VoterToken', function(accounts) {
   });
 
   it("should mint a given amount of token to a given address.", async () => {
-    await instance.mint(alice, mintAmount, {from: owner})
+    await instance.mint(alice, mintAmount)
+    await instance.renounceOwnership()
     const balance = await instance.balanceOf(alice)
     assert.equal(balance, mintAmount, 'Minted amount is incorrect')
   });
@@ -40,14 +43,16 @@ contract('VoterToken', function(accounts) {
 
   it("should burn a given amount of token.", async () => {
     await instance.mint(owner, mintAmount)
+    await instance.renounceOwnership()
     await instance.burn(burnAmount)
 
     const balance = await instance.balanceOf(owner)
     assert.equal(balance, mintAmount - burnAmount, 'Mint - Burn amount is incorrect')
   });
 
-  it("should transfer a given amount of token from address to address.", async () => {
+  it("should transfer from address to address.", async () => {
     await instance.mint(owner, mintAmount)
+    await instance.renounceOwnership()
     await instance.transfer(alice, transferAmount)
 
     const balanceOwner = await instance.balanceOf(owner)
@@ -56,4 +61,22 @@ contract('VoterToken', function(accounts) {
     assert.equal(balanceAlice, transferAmount, 'Transferred amount for alice is incorrect' + tokenName)
   });
 
+  it("should not transfer from address to address if not renouncedOwnership.", async () => {
+    await instance.mint(owner, mintAmount)
+    await catchRevert(instance.transfer(alice, transferAmount))
+  });
+
+  it("should not transfer from address to address if not valid yet.", async () => {
+    instance = await VoterToken.new(tokenName, unixNow + 100, unixNow + 1000)
+    await instance.mint(owner, mintAmount)
+    await instance.renounceOwnership()
+    await catchRevert(instance.transfer(alice, transferAmount))
+  });
+
+  it("should not transfer from address to address if voting expired.", async () => {
+    instance = await VoterToken.new(tokenName, unixNow -100, unixNow - 10)
+    await instance.mint(owner, mintAmount)
+    await instance.renounceOwnership()
+    await catchRevert(instance.transfer(alice, transferAmount))
+  });
 })
