@@ -1,14 +1,14 @@
 const catchRevert = require("./exceptionsHelpers.js").catchRevert
-const Members = artifacts.require("./Members.sol")
+const WithMembers = artifacts.require("./WithMembers.sol")
 
-contract('Members', function (accounts) {
+contract('WithMembers', function (accounts) {
 
   const owner = accounts[0]
   const alice = accounts[1]
   const bob = accounts[2]
 
   beforeEach(async () => {
-    instance = await Members.new()
+    instance = await WithMembers.new()
   })
 
   it("should set and return the correct quorumPercentage", async () => {

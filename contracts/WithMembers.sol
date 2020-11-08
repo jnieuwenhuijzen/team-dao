@@ -8,7 +8,7 @@ import "./openzeppelin/SafeMath.sol";
 /// @author Jarl Nieuwenhuijzen
 /// @notice This contract should be used in conjunction with team-dao
 /// @dev inherit this contract
-contract Members is Ownable {
+contract WithMembers is Ownable {
     mapping(address => bool) public members;
     uint256 public totalMembers = 0;
     uint256 public quorumPercentage = 60;
