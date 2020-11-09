@@ -13,14 +13,14 @@ contract VoterToken is ERC20Burnable, Ownable {
     uint256 public votingUntil;
 
     /// @notice Construct a standard ERC20 token, add voting timeframe
-    /// @param _name A name for this vote
+    /// @param name A name for this vote
     /// @param _votingFrom The unix timestamp start of the voting timeframe
     /// @param _votingUntil The unix timestamp end of the voting timeframe
     constructor(
-        string memory _name,
+        string memory name,
         uint256 _votingFrom,
         uint256 _votingUntil
-    ) public ERC20(_name, "VOTE") {
+    ) public ERC20(name, "VOTE") {
         votingFrom = _votingFrom;
         votingUntil = _votingUntil;
     }

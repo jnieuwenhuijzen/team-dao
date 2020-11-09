@@ -7,23 +7,23 @@ import "../WithMembers.sol";
 /// @author Jarl Nieuwenhuijzen
 /// @dev The WithMember contract contains only internal functions
 contract TestHelperWithMembers is WithMembers {
-    function addMember(address _newMember) public {
-        _addMember(_newMember);
+    function addMember(address newMember) public {
+        _addMember(newMember);
     }
 
-    function removeMember(address _member) public {
-        _removeMember(_member);
+    function removeMember(address member) public {
+        _removeMember(member);
     }
 
-    function setQuorumPercentage(uint256 _percentage) public {
-        _setQuorumPercentage(_percentage);
+    function setQuorumPercentage(uint256 percentage) public {
+        _setQuorumPercentage(percentage);
     }
 
-    function quorumReached(address[] memory _quorumMembers)
+    function quorumReached(address[] memory quorumMembers)
         public
         view
         returns (bool)
     {
-        return _quorumReached(_quorumMembers);
+        return _quorumReached(quorumMembers);
     }
 }

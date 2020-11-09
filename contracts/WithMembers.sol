@@ -7,7 +7,7 @@ import "./openzeppelin/SafeMath.sol";
 /// @author Jarl Nieuwenhuijzen
 /// @notice This contract should be used in conjunction with team-dao
 /// @dev inherit this contract
-/// @dev to implement: Maintain array list of members
+/// @dev to implement: Maintain array list of membersgi
 contract WithMembers {
     mapping(address => bool) public members;
     uint256 public totalMembers;
@@ -26,42 +26,42 @@ contract WithMembers {
     }
 
     /// @notice Add a member to the existing member pool
-    /// @param _newMember the address of the new member
-    function _addMember(address _newMember) internal {
-        require(!members[_newMember]);
-        members[_newMember] = true;
+    /// @param newMember the address of the new member
+    function _addMember(address newMember) internal {
+        require(!members[newMember]);
+        members[newMember] = true;
         totalMembers = SafeMath.add(totalMembers, 1);
     }
 
     /// @notice Remove a member from the existing member pool
-    /// @param _member the address of the member to be removed
-    function _removeMember(address _member) internal {
-        require(members[_member]);
-        members[_member] = false;
+    /// @param member the address of the member to be removed
+    function _removeMember(address member) internal {
+        require(members[member]);
+        members[member] = false;
         totalMembers = SafeMath.sub(totalMembers, 1);
     }
 
     /// @notice To change the quorumPercentage (default set to 60%)
-    /// @param _percentage the new quorumPercentage
-    function _setQuorumPercentage(uint256 _percentage) internal {
+    /// @param percentage the new quorumPercentage
+    function _setQuorumPercentage(uint256 percentage) internal {
         require(
-            _percentage >= 0 && _percentage <= 100,
+            percentage >= 0 && percentage <= 100,
             "Percentage should be between 0 and 100!"
         );
-        quorumPercentage = _percentage;
+        quorumPercentage = percentage;
     }
 
     /// @notice To check if an array of members reaches quorum
-    /// @param _quorumMembers the pool of quorum members to be checked
+    /// @param quorumMembers the pool of quorum members to be checked
     /// @dev note that non-existent members are ignored in determining the pool size
-    function _quorumReached(address[] memory _quorumMembers)
+    function _quorumReached(address[] memory quorumMembers)
         internal
         view
         returns (bool)
     {
         uint256 count = 0;
-        for (uint256 i = 0; i < _quorumMembers.length; i = SafeMath.add(i, 1)) {
-            if (members[_quorumMembers[i]]) {
+        for (uint256 i = 0; i < quorumMembers.length; i = SafeMath.add(i, 1)) {
+            if (members[quorumMembers[i]]) {
                 count = SafeMath.add(count, 1);
             }
         }
