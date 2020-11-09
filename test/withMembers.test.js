@@ -12,6 +12,11 @@ contract('TestHelperWithMembers', function (accounts) {
     instance = await TestHelperWithMembers.new()
   })
 
+  it("should have the msg.sender as member", async () => {
+    const isMember = await instance.isMember(owner);
+    assert.equal(isMember, true, "Creator should be a member!")
+  })
+
   it("should set and return the correct quorumPercentage", async () => {
     const newQuorumPerc = 80;
     await instance.setQuorumPercentage(newQuorumPerc);
@@ -20,13 +25,11 @@ contract('TestHelperWithMembers', function (accounts) {
   })
 
   it("should add a new member", async () => {
-    const isMemberBefore = await instance.members(alice)
     await instance.addMember(alice)
-    const totalMembersAfter = await instance.totalMembers()
-    const isMemberAfter = await instance.members(alice)
-    assert.equal(isMemberBefore, false, "Alice already is a member!")
-    assert.equal(isMemberAfter, true, "Alice dit not become a member!")
-    assert.equal(totalMembersAfter, 2, "Total members not equal to 2!")
+    const isMember = await instance.isMember(alice);
+    const totalMembers = await instance.totalMembers();
+    assert.equal(isMember, true, "Alice dit not become a member!")
+    assert.equal(totalMembers, 2, "Incorrect amount of members")
   })
 
   it("should not add a member who is already member", async () => {
@@ -34,17 +37,28 @@ contract('TestHelperWithMembers', function (accounts) {
     await catchRevert(instance.addMember(alice))
   })
 
-  it("should remove a new member", async () => {
+  it("should remove a 'in the middle' member", async () => {
     await instance.addMember(alice)
-    const totalMembersBefore = await instance.totalMembers()
-    const isMemberBefore = await instance.members(alice)
+    await instance.addMember(bob)
     await instance.removeMember(alice)
-    const totalMembersAfter = await instance.totalMembers()
-    const isMemberAfter = await instance.members(alice)
-    assert.equal(totalMembersBefore, 2, "Total members before not equal to 1!")
-    assert.equal(isMemberBefore, true, "Alice is not already a member!")
-    assert.equal(isMemberAfter, false, "Alice was not removed as a member!")
-    assert.equal(totalMembersAfter, 1, "Total members after not equal to 0!")
+    const totalMembers = await instance.totalMembers()
+    const aliceIsMemberAfter = await instance.isMember(alice)
+    const bobIsMemberAfter = await instance.isMember(bob)
+    assert.equal(aliceIsMemberAfter, false, "Alice was not removed as a member!")
+    assert.equal(bobIsMemberAfter, true, "Bob was removed as a member!")
+    assert.equal(totalMembers, 2, "Total members after not equal to 0!")
+  })
+
+  it("should remove a 'last' member", async () => {
+    await instance.addMember(alice)
+    await instance.addMember(bob)
+    await instance.removeMember(bob)
+    const totalMembers = await instance.totalMembers()
+    const aliceIsMemberAfter = await instance.isMember(alice)
+    const bobIsMemberAfter = await instance.isMember(bob)
+    assert.equal(bobIsMemberAfter, false, "Alice was not removed as a member!")
+    assert.equal(aliceIsMemberAfter, true, "Bob was removed as a member!")
+    assert.equal(totalMembers, 2, "Total members after not equal to 2!")
   })
 
   it("should not remove a member who is not already member", async () => {
@@ -76,9 +90,9 @@ contract('TestHelperWithMembers', function (accounts) {
   it("should recognize addresses as members", async () => {
     await instance.addMember(bob)
     await instance.addMember(alice)
-    const ownerIsMember = await instance.members(owner)
-    const bobIsMember = await instance.members(bob)
-    const aliceIsMember = await instance.members(alice)
+    const ownerIsMember = await instance.isMember(owner)
+    const bobIsMember = await instance.isMember(bob)
+    const aliceIsMember = await instance.isMember(alice)
     const count = await instance.totalMembers()
     assert.equal(ownerIsMember, true, "owner not recognized as member")
     assert.equal(bobIsMember, true, "bob not recognized as member")

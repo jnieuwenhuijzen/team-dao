@@ -9,36 +9,53 @@ import "./openzeppelin/SafeMath.sol";
 /// @dev inherit this contract
 /// @dev to implement: Maintain array list of membersgi
 contract WithMembers {
-    mapping(address => bool) public members;
-    uint256 public totalMembers;
+    mapping(address => uint256) memberIndex;
+    address[] public members;
     uint256 public quorumPercentage = 60;
 
     /// @notice Check if the msg.sender is a member
     modifier onlyMembers {
-        require(members[msg.sender], "Members: caller is not member");
+        require(isMember(msg.sender), "Members: caller is not member");
         _;
     }
 
     /// @notice The creator of the contract automatically becomes the first member
     constructor() public {
-      members[msg.sender] = true;
-      totalMembers = 1;
+        members.push(msg.sender);
+        memberIndex[msg.sender] = members.length;
+    }
+
+    /// @notice return true if address is member
+    /// @param id the address to check
+    function isMember(address id) public view returns (bool) {
+        return memberIndex[id] > 0;
+    }
+
+    /// @notice total number of members
+    function totalMembers() public view returns (uint256) {
+        return members.length;
     }
 
     /// @notice Add a member to the existing member pool
     /// @param newMember the address of the new member
     function _addMember(address newMember) internal {
-        require(!members[newMember]);
-        members[newMember] = true;
-        totalMembers = SafeMath.add(totalMembers, 1);
+        require(memberIndex[newMember] == 0, "Cannot add duplicate member!");
+        members.push(newMember);
+        memberIndex[newMember] = members.length;
     }
 
     /// @notice Remove a member from the existing member pool
     /// @param member the address of the member to be removed
     function _removeMember(address member) internal {
-        require(members[member]);
-        members[member] = false;
-        totalMembers = SafeMath.sub(totalMembers, 1);
+        uint256 index = memberIndex[member];
+        require(index > 0, "Cannot remove someone that is not member");
+        if (index < members.length) {
+            address lastMember = members[members.length - 1];
+            members[index] = lastMember;
+            memberIndex[lastMember] = index;
+        }
+        memberIndex[member] = 0;
+        members.pop();
     }
 
     /// @notice To change the quorumPercentage (default set to 60%)
@@ -61,11 +78,11 @@ contract WithMembers {
     {
         uint256 count = 0;
         for (uint256 i = 0; i < quorumMembers.length; i = SafeMath.add(i, 1)) {
-            if (members[quorumMembers[i]]) {
+            if (memberIndex[quorumMembers[i]] > 0) {
                 count = SafeMath.add(count, 1);
             }
         }
         return (SafeMath.mul(count, 100) >=
-            SafeMath.mul(totalMembers, quorumPercentage));
+            SafeMath.mul(members.length, quorumPercentage));
     }
 }
