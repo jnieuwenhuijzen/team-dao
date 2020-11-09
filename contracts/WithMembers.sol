@@ -77,7 +77,7 @@ contract WithMembers {
         returns (bool)
     {
         uint256 count = 0;
-        for (uint256 i = 0; i < quorumMembers.length; i = SafeMath.add(i, 1)) {
+        for (uint256 i = 0; i < quorumMembers.length; ++i) {
             if (memberIndex[quorumMembers[i]] > 0) {
                 count = SafeMath.add(count, 1);
             }

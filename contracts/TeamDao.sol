@@ -14,7 +14,8 @@ contract TeamDao is WithMembers {
     }
 
     struct Proposal {
-        VotingToken token;
+        string name;
+        VoterToken token;
         ProposalType proposalType;
         address[] quorum;
         uint256 startTime;
@@ -32,17 +33,17 @@ contract TeamDao is WithMembers {
     }
 
     function _createVote(uint256 pid) internal {
-        proposals[pid].votingToken = new VoterToken(
+        proposals[pid].token = new VoterToken(
             proposals[pid].name,
             proposals[pid].startTime,
             proposals[pid].endTime
         );
-        for (uint256 i = 0; i < members; ++i) {
-            proposals[pid].votingToken.mint(
+        for (uint256 i = 0; i < members.length; ++i) {
+            proposals[pid].token.mint(
                 members[i],
                 votingPower[members[i]]
             );
         }
-        votingToken.renounceOwnership();
+        proposals[pid].token.renounceOwnership();
     }
 }
