@@ -53,12 +53,21 @@ contract TeamDao is WithMembers {
         );
     }
 
-    function proposeRemoveMember() onlyMembers public {
-
-    }
-
-    function proposeQuorum() onlyMembers public {
-
+    function proposeVote(
+        string memory name,
+        uint256 startTime,
+        uint256 endTime,
+        bytes32[] memory votingOptions
+    ) onlyMembers public {
+        _setProposal(
+            name,
+            ProposalType.Vote,
+            startTime,
+            endTime,
+            address(0),
+            0,
+            votingOptions
+        );
     }
 
     function _setProposal(
@@ -120,7 +129,8 @@ contract TeamDao is WithMembers {
         proposals[proposer].votingToken = new VotingToken(
             proposals[proposer].name,
             proposals[proposer].startTime,
-            proposals[proposer].endTime
+            proposals[proposer].endTime,
+            proposals[proposer].votingOptions
         );
         for (uint256 i = 0; i < members.length; ++i) {
             proposals[proposer].votingToken.mint(

@@ -12,6 +12,9 @@ contract('TeamDao', function(accounts) {
 
   const address0 = '0x0000000000000000000000000000000000000000'
 
+  const option1 = '0x4f7074696f6e3100000000000000000000000000000000000000000000000000'
+  const option2 = '0x4f7074696f6e3200000000000000000000000000000000000000000000000000'
+
   beforeEach(async () => {
     instance = await TeamDao.new(100)
   })
@@ -19,7 +22,19 @@ contract('TeamDao', function(accounts) {
   it("should set a addMember proposal", async () => {
     await instance.proposeAddMember("myAddMember", 0, 0, bob)
     const result = await instance.getProposal(alice)
-    assert.equal(result.quorum.length, 1, 'Could not set proposal')
+    assert.equal(result.quorum.length, 1, 'Could not propose addUser')
+  });
+
+  it("should set a vote proposal", async () => {
+    votingOptions = [
+      option1,
+      option2
+    ]
+    await instance.proposeVote("myVote", 0, 0, votingOptions)
+    const result = await instance.getProposal(alice)
+    assert.equal(result.votingOptions.length, 2, 'expecting 2 votingOptions')
+    assert.equal(result.votingOptions[0], option1, 'votingOption 1 not stored correct')
+    assert.equal(result.votingOptions[1], option2, 'votingOption 2 not stored correct')
   });
 
   it("should not overwrite a proposal", async () => {
@@ -53,6 +68,7 @@ contract('TeamDao', function(accounts) {
     assert.equal(result.startTime, startTime, "startTime not set in proposal")
     assert.equal(result.endTime, endTime, "endTime not set in proposal")
     assert.equal(result.payloadAddress, bob, "address not set correct")
+    assert.equal(result.votingOptions.length, 0, "there should be 0 voting options")
   });
 
 })
