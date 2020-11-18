@@ -103,7 +103,7 @@ contract TeamDao is WithMembers {
     function proposeSetIndividualVotingPower(
         string memory name,
         address member,
-        uint256 votingPower
+        uint256 individualVotingPower
     ) onlyMembers public {
         bytes32[] memory votingOptions;
         _setProposal(
@@ -112,14 +112,14 @@ contract TeamDao is WithMembers {
             0,
             0,
             member,
-            votingPower,
+            individualVotingPower,
             votingOptions
         );
     }
 
     function proposeSetDefaultVotingPower(
         string memory name,
-        uint256 defaultVotingPower
+        uint256 _defaultVotingPower
     ) onlyMembers public {
         bytes32[] memory votingOptions;
         _setProposal(
@@ -128,7 +128,7 @@ contract TeamDao is WithMembers {
             0,
             0,
             address(0),
-            defaultVotingPower,
+            _defaultVotingPower,
             votingOptions
         );
     }
