@@ -8,7 +8,7 @@ import "./openzeppelin/Ownable.sol";
 /// @author Jarl Nieuwenhuijzen
 /// @notice This contract should be used in conjunction with team-dao
 /// @dev This contract is based on openzeppelin ERC20 contracts with only transferring prerequisites added
-contract VoterToken is ERC20Burnable, Ownable {
+contract VotingToken is ERC20Burnable, Ownable {
     uint256 public votingFrom;
     uint256 public votingUntil;
 

@@ -1,7 +1,7 @@
 const catchRevert = require("./exceptionsHelpers.js").catchRevert
-const VoterToken = artifacts.require("./VoterToken.sol")
+const VotingToken = artifacts.require("./VotingToken.sol")
 
-contract('VoterToken', function(accounts) {
+contract('VotingToken', function(accounts) {
 
   const owner = accounts[0]
   const alice = accounts[1]
@@ -16,7 +16,7 @@ contract('VoterToken', function(accounts) {
   const unixNow = Math.floor(Date.now() / 1000)
 
   beforeEach(async () => {
-    instance = await VoterToken.new(tokenName, unixNow, unixNow + 1000)
+    instance = await VotingToken.new(tokenName, unixNow, unixNow + 1000)
   })
 
   it("should return the correct name of the token", async () => {
@@ -67,14 +67,14 @@ contract('VoterToken', function(accounts) {
   });
 
   it("should not transfer from address to address if not valid yet.", async () => {
-    instance = await VoterToken.new(tokenName, unixNow + 100, unixNow + 1000)
+    instance = await VotingToken.new(tokenName, unixNow + 100, unixNow + 1000)
     await instance.mint(owner, mintAmount)
     await instance.renounceOwnership()
     await catchRevert(instance.transfer(alice, transferAmount))
   });
 
   it("should not transfer from address to address if voting expired.", async () => {
-    instance = await VoterToken.new(tokenName, unixNow -100, unixNow - 10)
+    instance = await VotingToken.new(tokenName, unixNow -100, unixNow - 10)
     await instance.mint(owner, mintAmount)
     await instance.renounceOwnership()
     await catchRevert(instance.transfer(alice, transferAmount))
