@@ -16,42 +16,43 @@ contract('TeamDao', function(accounts) {
     instance = await TeamDao.new(100)
   })
 
-  it("should set a proposal", async () => {
-    await instance.setProposal("My_proposal", 0, 0, 0)
+  it("should set a addMember proposal", async () => {
+    await instance.proposeAddMember("myAddMember", 0, 0, bob)
     const result = await instance.getProposal(alice)
-    assert.equal(result[3].length, 1, 'Could not set proposal')
+    assert.equal(result.quorum.length, 1, 'Could not set proposal')
   });
 
   it("should not overwrite a proposal", async () => {
-    await instance.setProposal("My_proposal", 0, 0, 0)
-    await catchRevert(instance.setProposal("My_proposal", 0, 0, 0))
+    await instance.proposeAddMember("My_proposal", 0, 0, bob)
+    await catchRevert(instance.proposeAddMember("My_proposal", 0, 0, bob))
   });
 
   it("should remove a proposal", async () => {
-    await instance.setProposal("My_proposal1", 0, 0, 0)
+    await instance.proposeAddMember("My_proposal", 0, 0, bob)
     await instance.removeProposal()
     const result = await instance.getProposal(alice)
-    assert.equal(result[3].length, 0, 'Proposal not removed')
+    assert.equal(result.quorum.length, 0, 'Proposal not removed')
   });
 
   it("should only allow members to add a proposal", async () => {
-    await catchRevert(instance.setProposal("My_proposal", 0, 0, 0, {from: bob}))
+    await catchRevert(instance.proposeAddMember("My_proposal", 0, 0, alice, {from: bob}))
   });
 
-  it("should retrieve proposal parameters", async () => {
+  it("should retrieve all proposal parameters", async () => {
     const name = "My_proposal"
     const proposalType = 1
     const startTime = 2
     const endTime = 3
-    await instance.setProposal(name, proposalType, startTime, endTime)
+    await instance.proposeAddMember(name, startTime, endTime, bob)
     const result = await instance.getProposal(alice)
-    assert.equal(result[0], name, "Name not set in proposal")
-    assert.equal(result[1], address0, "Address not correctly initialized in proposal")
-    assert.equal(result[2], proposalType, "ProposalType not set in proposal")
-    assert.equal(result[3].length, 1, "quorum array not initialized in proposal")
-    assert.equal(result[3][0], alice, "quorum array not initialized in proposal")
-    assert.equal(result[4], startTime, "startTime not set in proposal")
-    assert.equal(result[5], endTime, "endTime not set in proposal")
+    assert.equal(result.name, name, "Name not set in proposal")
+    assert.equal(result.votingToken, address0, "Voting token address not correctly initialized in proposal")
+    assert.equal(result.proposalType, proposalType, "ProposalType not set in proposal")
+    assert.equal(result.quorum.length, 1, "quorum array not initialized in proposal")
+    assert.equal(result.quorum[0], alice, "quorum array not initialized in proposal")
+    assert.equal(result.startTime, startTime, "startTime not set in proposal")
+    assert.equal(result.endTime, endTime, "endTime not set in proposal")
+    assert.equal(result.payloadAddress, bob, "address not set correct")
   });
 
 })

@@ -6,20 +6,24 @@ import "./VotingToken.sol";
 
 contract TeamDao is WithMembers {
     enum ProposalType {
-        SetIndividualVotingPower,
-        SetDefaultVotingPower,
+        SetQuorumPercentage,
         AddMember,
         RemoveMember,
-        Vote
+        Vote,
+        SetIndividualVotingPower,
+        SetDefaultVotingPower
     }
 
     struct Proposal {
         string name;
-        VotingToken token;
+        VotingToken votingToken;
         ProposalType proposalType;
         address[] quorum;
         uint256 startTime;
         uint256 endTime;
+        address payloadAddress;
+        uint256 payloadNumber;
+        bytes32[] votingOptions;
     }
     mapping(address => Proposal) proposals;
 
@@ -31,23 +35,55 @@ contract TeamDao is WithMembers {
         votingPower[msg.sender] = defaultVotingPower;
     }
 
-    function setProposal(
+    function proposeAddMember(
+        string memory name,
+        uint256 startTime,
+        uint256 endTime,
+        address newMember
+    ) onlyMembers public {
+        bytes32[] memory votingOptions;
+        _setProposal(
+            name,
+            ProposalType.AddMember,
+            startTime,
+            endTime,
+            newMember,
+            0,
+            votingOptions
+        );
+    }
+
+    function proposeRemoveMember() onlyMembers public {
+
+    }
+
+    function proposeQuorum() onlyMembers public {
+
+    }
+
+    function _setProposal(
         string memory _name,
         ProposalType _proposalType,
         uint256 _startTime,
-        uint256 _endTime
-    ) onlyMembers public {
+        uint256 _endTime,
+        address _payloadAddress,
+        uint256 _payloadNumber,
+        bytes32[] memory _votingOptions
+    ) internal {
         require(proposals[msg.sender].quorum.length == 0, 'Cannot overwrite proposal!');
         address[] storage initialQuorum;
         initialQuorum.push(msg.sender);
         VotingToken initialVotingToken;
         proposals[msg.sender] = Proposal({
             name: _name,
-            token: initialVotingToken,
             proposalType: _proposalType,
             quorum: initialQuorum,
             startTime: _startTime,
-            endTime: _endTime
+            endTime: _endTime,
+            votingToken: initialVotingToken,
+            payloadAddress: _payloadAddress,
+            payloadNumber: _payloadNumber,
+            votingOptions: _votingOptions
         });
     }
 
@@ -56,38 +92,42 @@ contract TeamDao is WithMembers {
     }
 
     function getProposal(address proposer) public view returns(
-        string memory,
-        VotingToken,
-        ProposalType,
-        address[] memory,
-        uint256,
-        uint256
+        string memory name,
+        VotingToken votingToken,
+        ProposalType proposalType,
+        address[] memory quorum,
+        uint256 startTime,
+        uint256 endTime,
+        address payloadAddress,
+        uint256 payloadNumber,
+        bytes32[] memory votingOptions
     ) {
-        return (
-            proposals[proposer].name,
-            proposals[proposer].token,
-            proposals[proposer].proposalType,
-            proposals[proposer].quorum,
-            proposals[proposer].startTime,
-            proposals[proposer].endTime
-        );
+        name = proposals[proposer].name;
+        votingToken = proposals[proposer].votingToken;
+        proposalType = proposals[proposer].proposalType;
+        quorum = proposals[proposer].quorum;
+        startTime = proposals[proposer].startTime;
+        endTime = proposals[proposer].endTime;
+        payloadAddress = proposals[proposer].payloadAddress;
+        payloadNumber = proposals[proposer].payloadNumber;
+        votingOptions = proposals[proposer].votingOptions;
     }
 
     function createVote(address proposer) public {
-        // require(proposer <= this.totalProposals(), "Proposal does not exist!");
+        require(proposals[proposer].quorum.length > 0, "Proposal does not exist!");
         require(proposals[proposer].proposalType == ProposalType.Vote, "Proposal is not a vote!");
         require(_quorumReached(proposals[proposer].quorum), 'No quorum majority reached yet!');
-        proposals[proposer].token = new VotingToken(
+        proposals[proposer].votingToken = new VotingToken(
             proposals[proposer].name,
             proposals[proposer].startTime,
             proposals[proposer].endTime
         );
         for (uint256 i = 0; i < members.length; ++i) {
-            proposals[proposer].token.mint(
+            proposals[proposer].votingToken.mint(
                 members[i],
                 votingPower[members[i]]
             );
         }
-        proposals[proposer].token.renounceOwnership();
+        proposals[proposer].votingToken.renounceOwnership();
     }
 }
