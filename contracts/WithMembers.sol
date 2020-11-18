@@ -47,6 +47,7 @@ contract WithMembers {
     /// @notice Remove a member from the existing member pool
     /// @param member the address of the member to be removed
     function _removeMember(address member) internal {
+        require(members.length > 1, "Cannot remove last member");
         uint256 index = memberIndex[member];
         require(index > 0, "Cannot remove someone that is not member");
         if (index < members.length) {

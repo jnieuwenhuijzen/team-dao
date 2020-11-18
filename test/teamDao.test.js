@@ -107,4 +107,32 @@ contract('TeamDao', function(accounts) {
     assert.equal(member3, charlie, "third member not equal to charlie")
   });
 
+  it("should remove the 2nd member after approval", async () => {
+    await instance.proposeRemoveMember("Remove Bob!", bob, { from: bob })
+    await instance.supportProposal(bob, { from:alice })
+    const totalMembers = await instance.totalMembers()
+    member1 = await instance.members(0);
+    assert.equal(totalMembers, 1, "total members should be equal to 1")
+    assert.equal(member1, alice, "first member not equal to alice")
+  });
+
+  it("should not remove the last member", async () => {
+    await instance.proposeRemoveMember("Remove Bob!", bob, { from: bob })
+    await instance.supportProposal(bob, { from: alice })
+    await catchRevert(instance.proposeRemoveMember("Remove Alice!", alice, { from: alice }))
+  });
+
+  it("should change quorum per proposal", async () => {
+    await instance.proposeAddMember("Add Charlie!", charlie, { from: alice })
+    await instance.supportProposal(alice, { from: bob })
+    await instance.proposeSetQuorumPercentage("Set percentage to 90%", 90, { from: alice})
+    await instance.supportProposal(alice, { from: bob })
+
+    await instance.proposeRemoveMember("Remove Alice!", alice, { from: alice })
+    await instance.supportProposal(alice, { from: bob })
+
+    const totalMembers = await instance.totalMembers()
+    assert.equal(totalMembers, 3, "total members should be equal to 3")
+  });
+
 })

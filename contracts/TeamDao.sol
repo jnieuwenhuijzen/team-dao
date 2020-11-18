@@ -35,6 +35,22 @@ contract TeamDao is WithMembers {
         votingPower[msg.sender] = defaultVotingPower;
     }
 
+    function proposeSetQuorumPercentage(
+        string memory name,
+        uint256 quorumPercentage
+    ) onlyMembers public {
+        bytes32[] memory votingOptions;
+        _setProposal(
+            name,
+            ProposalType.SetQuorumPercentage,
+            0,
+            0,
+            address(0),
+            quorumPercentage,
+            votingOptions
+        );
+    }
+
     function proposeAddMember(
         string memory name,
         address newMember
@@ -46,6 +62,22 @@ contract TeamDao is WithMembers {
             0,
             0,
             newMember,
+            0,
+            votingOptions
+        );
+    }
+
+    function proposeRemoveMember(
+        string memory name,
+        address member
+    ) onlyMembers public {
+        bytes32[] memory votingOptions;
+        _setProposal(
+            name,
+            ProposalType.RemoveMember,
+            0,
+            0,
+            member,
             0,
             votingOptions
         );
@@ -129,8 +161,12 @@ contract TeamDao is WithMembers {
 
     function activateProposal(address proposer) public {
         require(_quorumReached(proposals[proposer].quorum), "Quorum not reached!");
-        if (proposals[proposer].proposalType == ProposalType.AddMember) {
+        if (proposals[proposer].proposalType == ProposalType.SetQuorumPercentage) {
+            _setQuorumPercentage(proposals[proposer].payloadNumber);
+        } else if (proposals[proposer].proposalType == ProposalType.AddMember) {
             _addMember(proposals[proposer].payloadAddress);
+        } else if (proposals[proposer].proposalType == ProposalType.RemoveMember) {
+            _removeMember(proposals[proposer].payloadAddress);
         }
         delete proposals[proposer];
     }
