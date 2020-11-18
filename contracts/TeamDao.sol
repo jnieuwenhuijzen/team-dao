@@ -100,6 +100,39 @@ contract TeamDao is WithMembers {
         );
     }
 
+    function proposeSetIndividualVotingPower(
+        string memory name,
+        address member,
+        uint256 votingPower
+    ) onlyMembers public {
+        bytes32[] memory votingOptions;
+        _setProposal(
+            name,
+            ProposalType.SetIndividualVotingPower,
+            0,
+            0,
+            member,
+            votingPower,
+            votingOptions
+        );
+    }
+
+    function proposeSetDefaultVotingPower(
+        string memory name,
+        uint256 defaultVotingPower
+    ) onlyMembers public {
+        bytes32[] memory votingOptions;
+        _setProposal(
+            name,
+            ProposalType.SetDefaultVotingPower,
+            0,
+            0,
+            address(0),
+            defaultVotingPower,
+            votingOptions
+        );
+    }
+
     function _setProposal(
         string memory _name,
         ProposalType _proposalType,
@@ -167,6 +200,12 @@ contract TeamDao is WithMembers {
             _addMember(proposals[proposer].payloadAddress);
         } else if (proposals[proposer].proposalType == ProposalType.RemoveMember) {
             _removeMember(proposals[proposer].payloadAddress);
+        } else if (proposals[proposer].proposalType == ProposalType.Vote) {
+            createVote(proposer);
+        } else if (proposals[proposer].proposalType == ProposalType.SetIndividualVotingPower) {
+            votingPower[(proposals[proposer].payloadAddress)] = proposals[proposer].payloadNumber;
+        } else if (proposals[proposer].proposalType == ProposalType.SetDefaultVotingPower) {
+            defaultVotingPower = proposals[proposer].payloadNumber;
         }
         delete proposals[proposer];
     }
