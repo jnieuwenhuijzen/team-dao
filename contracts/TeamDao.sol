@@ -37,16 +37,14 @@ contract TeamDao is WithMembers {
 
     function proposeAddMember(
         string memory name,
-        uint256 startTime,
-        uint256 endTime,
         address newMember
     ) onlyMembers public {
         bytes32[] memory votingOptions;
         _setProposal(
             name,
             ProposalType.AddMember,
-            startTime,
-            endTime,
+            0,
+            0,
             newMember,
             0,
             votingOptions
@@ -81,7 +79,6 @@ contract TeamDao is WithMembers {
     ) internal {
         require(proposals[msg.sender].quorum.length == 0, 'Cannot overwrite proposal!');
         address[] storage initialQuorum;
-        initialQuorum.push(msg.sender);
         VotingToken initialVotingToken;
         proposals[msg.sender] = Proposal({
             name: _name,
@@ -94,6 +91,7 @@ contract TeamDao is WithMembers {
             payloadNumber: _payloadNumber,
             votingOptions: _votingOptions
         });
+        supportProposal(msg.sender);
     }
 
     function removeProposal() onlyMembers public {
@@ -120,6 +118,21 @@ contract TeamDao is WithMembers {
         payloadAddress = proposals[proposer].payloadAddress;
         payloadNumber = proposals[proposer].payloadNumber;
         votingOptions = proposals[proposer].votingOptions;
+    }
+
+    function supportProposal(address proposer) onlyMembers public {
+        proposals[proposer].quorum.push(msg.sender);
+        if (_quorumReached(proposals[proposer].quorum)) {
+            activateProposal(proposer);
+        }
+    }
+
+    function activateProposal(address proposer) public {
+        require(_quorumReached(proposals[proposer].quorum), "Quorum not reached!");
+        if (proposals[proposer].proposalType == ProposalType.AddMember) {
+            _addMember(proposals[proposer].payloadAddress);
+        }
+        delete proposals[proposer];
     }
 
     function createVote(address proposer) public {
