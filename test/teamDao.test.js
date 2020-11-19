@@ -17,9 +17,8 @@ contract('TeamDao', function(accounts) {
 
   beforeEach(async () => {
     instance = await TeamDao.new(100)
-
-    // First proposal is immediately activated and removed, therefor add proposal,
-    // then test the second
+    // First proposal is immediately activated and removed, therefor addMember proposal,
+    // which is immediately executed (on majority) then test the second
     await instance.proposeAddMember("test prepare", bob)
   })
 
@@ -133,6 +132,22 @@ contract('TeamDao', function(accounts) {
 
     const totalMembers = await instance.totalMembers()
     assert.equal(totalMembers, 3, "total members should be equal to 3")
+  });
+
+  it("should set individual voting power", async () => {
+    await instance.proposeSetIndividualVotingPower("Set bob's voting to 333!", bob, 333, { from: bob })
+    await instance.supportProposal(bob, { from: alice })
+    const votingPower = await instance.votingPower(bob)
+    assert.equal(votingPower, 333, "Votingpower not expectde value")
+  });
+
+  it("should set default voting power", async () => {
+    await instance.proposeSetDefaultVotingPower("Set default power to 5!", 5, { from: bob })
+    await instance.supportProposal(bob, { from: alice })
+    await instance.proposeAddMember("Add Charlie!", charlie)
+    await instance.supportProposal(alice, {from: bob})
+    const votingPower = await instance.votingPower(charlie)
+    assert.equal(votingPower, 5, "Votingpower not expected value")
   });
 
 })

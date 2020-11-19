@@ -27,8 +27,8 @@ contract TeamDao is WithMembers {
     }
     mapping(address => Proposal) proposals;
 
-    mapping(address => uint256) votingPower;
-    uint256 defaultVotingPower;
+    mapping(address => uint256) public votingPower;
+    uint256 public defaultVotingPower;
 
     constructor(uint256 _defaultVotingPower) public {
         _defaultVotingPower = defaultVotingPower;
@@ -198,6 +198,7 @@ contract TeamDao is WithMembers {
             _setQuorumPercentage(proposals[proposer].payloadNumber);
         } else if (proposals[proposer].proposalType == ProposalType.AddMember) {
             _addMember(proposals[proposer].payloadAddress);
+            votingPower[proposals[proposer].payloadAddress] = defaultVotingPower;
         } else if (proposals[proposer].proposalType == ProposalType.RemoveMember) {
             _removeMember(proposals[proposer].payloadAddress);
         } else if (proposals[proposer].proposalType == ProposalType.Vote) {
