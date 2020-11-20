@@ -14,8 +14,15 @@ export class EthereumService {
   network = '';
   addressChanged = false;
   networkChanged = false;
+  metaMaskInstalled = true;
 
   constructor() {
+    if (!window.ethereum) {
+      // MetaMask not installed
+      this.metaMaskInstalled = false;
+      return;
+    }
+
     // Capture change outside of the Angular zone
     setInterval(() => {
       if (this.addressChanged) { this.addressChanged = false; }
