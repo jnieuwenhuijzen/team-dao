@@ -13,18 +13,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jnieuwenhuijzen/dao-team.git"
+    "url": "git+https://github.com/jnieuwenhuijzen/team-dao.git"
   },
   "keywords": [
     "DAO",
     "Governance",
     "Truffle",
-    "Solidity"
+    "Solidity",
+    "Angular"
   ],
   "author": "Jarl Nieuwenhuijzen",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jnieuwenhuijzen/dao-team/issues"
+    "url": "https://github.com/jnieuwenhuijzen/team-dao/issues"
   },
-  "homepage": "https://github.com/jnieuwenhuijzen/dao-team#readme"
+  "homepage": "https://github.com/jnieuwenhuijzen/team-dao#readme"
 }
