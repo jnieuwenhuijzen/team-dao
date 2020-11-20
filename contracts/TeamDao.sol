@@ -35,7 +35,7 @@ contract TeamDao is WithMembers {
     /// @notice Construct a new team-dao. Creator becomes the first member, quorum is set to 60%
     /// @param _defaultVotingPower Number of tokens each member gets for each vote is 100 tokens
     constructor(uint256 _defaultVotingPower) public {
-        _defaultVotingPower = defaultVotingPower;
+        defaultVotingPower = _defaultVotingPower;
         votingPower[msg.sender] = defaultVotingPower;
     }
 
@@ -231,7 +231,7 @@ contract TeamDao is WithMembers {
 
     /// @notice Activate a prososal from a team member
     /// @param proposer address of the team member whose proposal should be activated
-    /// @dev the proposal is deleted after successfully activated
+    /// @dev the proposal is deleted after successfully activated, except when it is a vote
     function activateProposal(address proposer) public {
         require(_quorumReached(proposals[proposer].quorum), "Quorum not reached!");
         if (proposals[proposer].proposalType == ProposalType.SetQuorumPercentage) {
@@ -243,6 +243,7 @@ contract TeamDao is WithMembers {
             _removeMember(proposals[proposer].payloadAddress);
         } else if (proposals[proposer].proposalType == ProposalType.Vote) {
             createVote(proposer);
+            return; // Need a way to return the voting contract
         } else if (proposals[proposer].proposalType == ProposalType.SetIndividualVotingPower) {
             votingPower[(proposals[proposer].payloadAddress)] = proposals[proposer].payloadNumber;
         } else if (proposals[proposer].proposalType == ProposalType.SetDefaultVotingPower) {

@@ -40,6 +40,26 @@ contract('TeamDao', function(accounts) {
     assert.equal(result.votingOptions[1], option2, 'votingOption 2 not stored correct')
   });
 
+  it("should create a voting token when proposal accepted", async () => {
+    votingOptions = [
+      option1,
+      option2
+    ]
+    await instance.proposeVote("myVote", 0, 0, votingOptions)
+    await instance.supportProposal(alice, {from: bob})
+    const result = await instance.getProposal(alice)
+    tokenInstance = await VotingToken.at(result.votingToken)
+    const option1Address = await tokenInstance.votingAddresses(option1)
+    const option2Address = await tokenInstance.votingAddresses(option2)
+    const aliceBalance = await tokenInstance.balanceOf(alice)
+    const bobBalance = await tokenInstance.balanceOf(bob)
+    assert.notEqual(option1Address, address0, 'option 1 address equal to 0')
+    assert.notEqual(option2Address, address0, 'option 2 address equal to 0')
+    assert.notEqual(option1Address, option2Address, 'option 1 address equals option 2 address')
+    assert.equal(aliceBalance, 100, 'Alice has not 100 voting tokens')
+    assert.equal(bobBalance, 100, 'Alice has not 100 voting tokens')
+  });
+
   it("should not overwrite a proposal", async () => {
     await instance.proposeAddMember("My_proposal", charlie)
     await catchRevert(instance.proposeAddMember("My_proposal", bob))
