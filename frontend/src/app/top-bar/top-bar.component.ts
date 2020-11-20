@@ -8,16 +8,14 @@ import { EthereumService } from '../services/ethereum.service';
 })
 export class TopBarComponent implements OnInit {
 
-  constructor(private ethereumService: EthereumService) { }
+  constructor(public ethereumService: EthereumService) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void { }
+
+  getAddressValue(): string {
+    return this.ethereumService.network
+      ? this.ethereumService.network + ' - ' + this.ethereumService.address
+      : this.ethereumService.address;
   }
 
-  async connectMetamask(): Promise<void> {
-    await this.ethereumService.connect();
-  }
-
-  addressButtonValue(): string {
-    return this.ethereumService.address ? this.ethereumService.address : 'connect..';
-  }
 }

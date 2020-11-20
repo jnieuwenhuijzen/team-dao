@@ -2,4 +2,9 @@
   <h1>Team DAO</h1>
 </a>
 
-<a class="button fancy-button" (click)='connectMetamask()'><i class="material-icons">{{addressButtonValue()}}</i></a>
+<div *ngIf='ethereumService.address'>
+  <a class="button fancy-button"><i class="material-icons">{{getAddressValue()}}</i></a>
+</div>
+<div *ngIf='!ethereumService.address'>
+  <a class="button fancy-button" (click)='ethereumService.connect()'><i class="material-icons">Connect MetaMask</i></a>
+</div>
