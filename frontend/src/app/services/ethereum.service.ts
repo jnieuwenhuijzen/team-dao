@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { SelectMultipleControlValueAccessor } from '@angular/forms';
 
 declare global {
   interface Window {
@@ -13,41 +12,46 @@ declare global {
 export class EthereumService {
   address = '';
   network = '';
-  change = false;
+  addressChanged = false;
+  networkChanged = false;
 
   constructor() {
     // Capture change outside of the Angular zone
     setInterval(() => {
-      if (this.change) { this.change = false; }
+      if (this.addressChanged) { this.addressChanged = false; }
+      if (this.networkChanged) { this.networkChanged = false; }
     }, 500);
 
-    window.ethereum.on('accountsChanged', (accounts: string[]) => {
-      this.address = accounts[0];
-      this.change = true;
-    });
-    window.ethereum.on('networkChanged', (network: string) => {
-      switch (network) {
-        case '1':
+    window.ethereum.on('chainChanged', (network: string) => {
+      switch (window.ethereum.chainId) {
+        case '0x1':
           this.network = 'Mainnet';
           break;
-        case '2':
+        case '0x2':
           this.network = 'Morden';
           break;
-        case '3':
+        case '0x3':
           this.network = 'Ropsten';
           break;
-        case '4':
+        case '0x4':
           this.network = 'Rinkeby';
           break;
-        case '42':
+        case '0x2a':
           this.network = 'Kovan';
           break;
         default:
           this.network = '';
       }
-      this.change = true;
+      this.networkChanged = true;
     });
+
+    window.ethereum.on('accountsChanged', (accounts: string[]) => {
+      this.address = accounts[0];
+      this.addressChanged = true;
+    });
+
   }
+
 
   async connect(): Promise<void> {
     this.address = (await window.ethereum.request({ method: 'eth_requestAccounts' }))[0];
