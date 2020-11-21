@@ -1,15 +1,42 @@
-<a [routerLink]="['/']">
-  <h1>Team DAO</h1>
-</a>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
 
-<div *ngIf='ethereumService.metaMaskInstalled'>
-  <div *ngIf='ethereumService.address'>
-    <a class="button fancy-button"><i class="material-icons">{{getAddressValue()}}</i></a>
+  <a class="navbar-brand" href="#">
+    <img src="../assets/teamlogo.png" width="40px">
+    Team DAO
+  </a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+    <ul class="navbar-nav mr-auto">
+
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/home">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/contact-list">Contacts</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/contact-create">Create</a>
+      </li>
+
+    </ul>
   </div>
-  <div *ngIf='!ethereumService.address'>
-    <a class="button fancy-button" (click)='ethereumService.connect()'><i class="material-icons">Connect MetaMask</i></a>
-  </div>
-</div>
-<div *ngIf='!ethereumService.metaMaskInstalled'>
-  <a class="button fancy-button"><i class="material-icons">No MetaMask!</i></a>
-</div>
+
+  <button type="button" class="btn btn-light">
+    <div *ngIf='ethereumService.metaMaskInstalled'>
+      <div *ngIf='ethereumService.address'>
+        <a><i>{{getAddressValue()}}</i></a>
+      </div>
+      <div *ngIf='!ethereumService.address'>
+        <a (click)='ethereumService.connect()'><i>Connect MetaMask</i></a>
+      </div>
+    </div>
+    <div *ngIf='!ethereumService.metaMaskInstalled'>
+      <a><i>No MetaMask!</i></a>
+    </div>
+  </button>
+</nav>

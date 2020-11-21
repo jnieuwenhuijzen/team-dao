@@ -8,19 +8,21 @@ import { EthereumService } from './services/ethereum.service';
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { CanvasComponent } from './canvas/canvas.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TopBarComponent,
-    CanvasComponent
+    CanvasComponent,
+    LandingPageComponent
   ],
   imports: [
     ReactiveFormsModule,
     FormsModule,
     BrowserModule,
     RouterModule.forRoot([
-      { path: '', component: CanvasComponent },
+      { path: '', component: LandingPageComponent },
     ])
   ],
   providers: [EthereumService],
