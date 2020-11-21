@@ -4,6 +4,8 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { EthereumService } from './services/ethereum.service';
+import { TeamDaoService } from './services/team-dao.service';
+import { VotingTokenService } from './services/voting-token.service';
 
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
@@ -25,7 +27,7 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
       { path: '', component: LandingPageComponent },
     ])
   ],
-  providers: [EthereumService],
+  providers: [EthereumService, TeamDaoService, VotingTokenService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

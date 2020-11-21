@@ -1,7 +1,15 @@
-<div>
-  Join an existing team
-  <input weetwel>
-</div>
-<div>
-  Or create a new team
+<div *ngIf="ethereumService.address">
+  <div class="jumbotron min-vh-100 text-center m-0 d-flex flex-column justify-content-center">
+    <h3>Join an existing team</h3>
+    <div class="input-group mb-3 w-50 mx-auto">
+      <input type="text" class="form-control" bg-white placeholder="0x.." aria-label="Team's address"
+        aria-describedby="join-team">
+      <div class="input-group-append">
+        <button type="button" class="btn btn-secondary">Join</button>
+      </div>
+    </div>
+    <br>
+    <h3>Or create a new team</h3>
+    <button type="button" class="btn btn-secondary w-50 mx-auto">Create</button>
+  </div>
 </div>

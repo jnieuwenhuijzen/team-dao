@@ -12,31 +12,29 @@
 
   <div class="collapse navbar-collapse" id="navbarCollapse">
     <ul class="navbar-nav mr-auto">
-
       <li class="nav-item">
-        <a class="nav-link" routerLink="/home">Home</a>
+        <a class="nav-link" routerLink="/contact-list">Members</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/contact-list">Contacts</a>
+        <a class="nav-link" routerLink="/contact-create">Proposals</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/contact-create">Create</a>
+        <a class="nav-link" routerLink="/contact-create">Active Votes</a>
       </li>
-
     </ul>
   </div>
 
   <button type="button" class="btn btn-light">
     <div *ngIf='ethereumService.metaMaskInstalled'>
       <div *ngIf='ethereumService.address'>
-        <a><i>{{getAddressValue()}}</i></a>
+        <i>{{getAddressValue()}}</i>
       </div>
       <div *ngIf='!ethereumService.address'>
         <a (click)='ethereumService.connect()'><i>Connect MetaMask</i></a>
       </div>
     </div>
     <div *ngIf='!ethereumService.metaMaskInstalled'>
-      <a><i>No MetaMask!</i></a>
+      <i>No MetaMask!</i>
     </div>
   </button>
 </nav>
