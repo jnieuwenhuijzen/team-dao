@@ -13,9 +13,9 @@ export class TopBarComponent implements OnInit {
   ngOnInit(): void { }
 
   getAddressValue(): string {
-    return this.ethereumService.network
-      ? this.ethereumService.network + ' - ' + this.ethereumService.address
-      : this.ethereumService.address;
+    return (this.ethereumService.network
+      ? this.ethereumService.network + ' - ' : '')
+      + this.ethereumService.addressShort();
   }
 
 }
