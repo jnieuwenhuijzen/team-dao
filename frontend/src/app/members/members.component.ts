@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MetaMaskService } from '../services/metamask.service';
-import { TeamDaoService} from '../services/team-dao.service';
+import { TeamDaoService } from '../services/team-dao.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-landing-page',
-  templateUrl: './landing-page.component.html',
-  styleUrls: ['./landing-page.component.css']
+  selector: 'app-members',
+  templateUrl: './members.component.html',
+  styleUrls: ['./members.component.css']
 })
-export class LandingPageComponent implements OnInit {
+export class MembersComponent implements OnInit {
 
   constructor(
     public metaMaskService: MetaMaskService,
@@ -20,4 +20,5 @@ export class LandingPageComponent implements OnInit {
       this.router.navigateByUrl('/landing-page', { replaceUrl: true });
     }
   }
+
 }

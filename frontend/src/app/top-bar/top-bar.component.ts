@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EthereumService } from '../services/ethereum.service';
+import { MetaMaskService } from '../services/metamask.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -8,14 +8,14 @@ import { EthereumService } from '../services/ethereum.service';
 })
 export class TopBarComponent implements OnInit {
 
-  constructor(public ethereumService: EthereumService) { }
+  constructor(public metaMaskService: MetaMaskService) { }
 
   ngOnInit(): void { }
 
   getAddressValue(): string {
-    return (this.ethereumService.network
-      ? this.ethereumService.network + ' - ' : '')
-      + this.ethereumService.addressShort();
+    return (this.metaMaskService.network
+      ? this.metaMaskService.network + ' - ' : '')
+      + this.metaMaskService.addressShort();
   }
 
 }

@@ -1,7 +1,5 @@
-const VotingToken = artifacts.require("VotingToken.sol");
-const WithMembers = artifacts.require("WithMembers.sol");
+const TeamDao = artifacts.require("TeamDao.sol");
 
 module.exports = function (deployer) {
-  deployer.deploy(VotingToken, '', 0, 0, []);
-  deployer.deploy(WithMembers);
+  deployer.deploy(TeamDao, 100);
 };

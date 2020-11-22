@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EthereumService } from '../services/ethereum.service';
+import { MetaMaskService } from '../services/metamask.service';
 
 @Component({
   selector: 'app-canvas',
@@ -8,7 +8,7 @@ import { EthereumService } from '../services/ethereum.service';
 })
 export class CanvasComponent implements OnInit {
 
-  constructor(public ethereumService: EthereumService) { }
+  constructor(public metaMaskService: MetaMaskService) { }
 
   ngOnInit(): void {
   }

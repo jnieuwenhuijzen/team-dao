@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
 
-  <a class="navbar-brand" href="#">
+  <a class="nav-link navbar-brand" routerLink="/landing-page">
     <img src="../assets/teamlogo.png" width="40px">
     Team DAO
   </a>
@@ -13,28 +13,32 @@
   <div class="collapse navbar-collapse" id="navbarCollapse">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" routerLink="/contact-list">Members</a>
+        <a class="nav-link" routerLink="/members">Members</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/contact-create">Proposals</a>
+        <a class="nav-link" routerLink="/proposals">Proposals</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/contact-create">Active Votes</a>
+        <a class="nav-link" routerLink="/active-votes">Active Votes</a>
       </li>
     </ul>
   </div>
 
-  <button type="button" class="btn btn-light">
-    <div *ngIf='ethereumService.metaMaskInstalled'>
-      <div *ngIf='ethereumService.address'>
+  <div *ngIf='metaMaskService.metaMaskInstalled'>
+    <div *ngIf='metaMaskService.address'>
+      <button type="button" class="btn btn-light">
         <i>{{getAddressValue()}}</i>
-      </div>
-      <div *ngIf='!ethereumService.address'>
-        <a (click)='ethereumService.connect()'><i>Connect MetaMask</i></a>
-      </div>
+      </button>
     </div>
-    <div *ngIf='!ethereumService.metaMaskInstalled'>
+    <div *ngIf='!metaMaskService.address'>
+      <button type="button" class="btn btn-light" (click)='metaMaskService.connect()'>
+        <i>Connect MetaMask</i>
+      </button>
+    </div>
+  </div>
+  <div *ngIf='!metaMaskService.metaMaskInstalled'>
+    <button type="button" class="btn btn-warning">
       <i>No MetaMask!</i>
-    </div>
-  </button>
+    </button>
+  </div>
 </nav>

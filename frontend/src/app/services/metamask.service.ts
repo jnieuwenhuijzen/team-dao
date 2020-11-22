@@ -9,7 +9,8 @@ declare global {
 @Injectable({
   providedIn: 'root'
 })
-export class EthereumService {
+export class MetaMaskService {
+  ethereum = window.ethereum;
   metaMaskInstalled = true;
   address = '';
   network = '';
