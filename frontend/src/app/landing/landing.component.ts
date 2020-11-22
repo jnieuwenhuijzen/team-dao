@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./landing.component.css']
 })
 export class LandingComponent implements OnInit {
+  contractAddress = '';
 
   constructor(
     public metaMaskService: MetaMaskService,
@@ -16,5 +17,18 @@ export class LandingComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  joinTeam(): void {
+    this.teamDaoService.setContractAddress(this.contractAddress);
+    this.router.navigateByUrl('/members', { replaceUrl: true });
+  }
+
+  createTeam(): void {
+  }
+
+  switchTeam(): void {
+    this.contractAddress = '';
+    this.teamDaoService.setContractAddress(this.contractAddress);
   }
 }

@@ -1,5 +1,11 @@
-<div *ngIf="metaMaskService.address">
+<div *ngIf="metaMaskService.address" class="text-dark">
   <div class="jumbotron min-vh-100 text-center m-0 d-flex flex-column justify-content-center">
-    <p>members works!</p>
+    <h3>Team members</h3>
+    <br>
+    <div *ngFor="let member of members">
+      <button type="button" class="btn btn-outline-dark disabled">
+        {{member}}
+      </button>
+    </div>
   </div>
 </div>

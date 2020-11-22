@@ -9,16 +9,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./members.component.css']
 })
 export class MembersComponent implements OnInit {
+  members: string[] = [];
 
   constructor(
     public metaMaskService: MetaMaskService,
     public teamDaoService: TeamDaoService,
     private router: Router) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     if (!this.teamDaoService.contractAddress) {
       this.router.navigateByUrl('/landing', { replaceUrl: true });
     }
+    this.members = await this.teamDaoService.getMembers();
   }
+
 
 }
