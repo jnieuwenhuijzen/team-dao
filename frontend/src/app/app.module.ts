@@ -10,7 +10,7 @@ import { VotingTokenService } from './services/voting-token.service';
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { CanvasComponent } from './canvas/canvas.component';
-import { LandingPageComponent } from './landing-page/landing-page.component';
+import { LandingComponent } from './landing/landing.component';
 import { MembersComponent } from './members/members.component';
 import { ProposalsComponent } from './proposals/proposals.component';
 import { ActiveVotesComponent } from './active-votes/active-votes.component';
@@ -20,7 +20,7 @@ import { ActiveVotesComponent } from './active-votes/active-votes.component';
     AppComponent,
     TopBarComponent,
     CanvasComponent,
-    LandingPageComponent,
+    LandingComponent,
     MembersComponent,
     ProposalsComponent,
     ActiveVotesComponent

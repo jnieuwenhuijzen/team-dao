@@ -16,7 +16,7 @@ export class TeamDaoService {
    }
 
    setContractAddress(address: string): void {
-     this.contractAddress = address;
      this.contract = new ethers.Contract(address, teamDaoAbi, this.provider);
+     this.contractAddress = address;
    }
 }

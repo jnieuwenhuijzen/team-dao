@@ -4,11 +4,11 @@ import { TeamDaoService} from '../services/team-dao.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-landing-page',
-  templateUrl: './landing-page.component.html',
-  styleUrls: ['./landing-page.component.css']
+  selector: 'app-landing',
+  templateUrl: './landing.component.html',
+  styleUrls: ['./landing.component.css']
 })
-export class LandingPageComponent implements OnInit {
+export class LandingComponent implements OnInit {
 
   constructor(
     public metaMaskService: MetaMaskService,
@@ -16,8 +16,5 @@ export class LandingPageComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    if (!this.teamDaoService.contractAddress) {
-      this.router.navigateByUrl('/landing-page', { replaceUrl: true });
-    }
   }
 }

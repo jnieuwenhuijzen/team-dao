@@ -17,7 +17,7 @@ export class MembersComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.teamDaoService.contractAddress) {
-      this.router.navigateByUrl('/landing-page', { replaceUrl: true });
+      this.router.navigateByUrl('/landing', { replaceUrl: true });
     }
   }
 
