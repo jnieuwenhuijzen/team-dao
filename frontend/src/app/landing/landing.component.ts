@@ -20,7 +20,7 @@ export class LandingComponent implements OnInit {
   }
 
   joinTeam(): void {
-    this.teamDaoService.setContractAddress(this.contractAddress);
+    this.teamDaoService.setContract(this.contractAddress);
     this.router.navigateByUrl('/members', { replaceUrl: true });
   }
 
@@ -29,6 +29,6 @@ export class LandingComponent implements OnInit {
 
   switchTeam(): void {
     this.contractAddress = '';
-    this.teamDaoService.setContractAddress(this.contractAddress);
+    this.teamDaoService.setContract(this.contractAddress);
   }
 }

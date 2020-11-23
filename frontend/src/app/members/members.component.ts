@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./members.component.css']
 })
 export class MembersComponent implements OnInit {
-  members: string[] = [];
+  members: any[] = [];
 
   constructor(
     public metaMaskService: MetaMaskService,
@@ -19,8 +19,16 @@ export class MembersComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     if (!this.teamDaoService.contractAddress) {
       this.router.navigateByUrl('/landing', { replaceUrl: true });
+    } else {
+      try {
+        this.members = await this.teamDaoService.getMembers();
+      } catch (err) {
+        console.log(err);
+        this.teamDaoService.setContract('');
+        this.router.navigateByUrl('/landing', { replaceUrl: true });
+        alert('Error reading contract');
+      }
     }
-    this.members = await this.teamDaoService.getMembers();
   }
 
 

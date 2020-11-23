@@ -3,9 +3,24 @@
     <h3>Team members</h3>
     <br>
     <div *ngFor="let member of members">
-      <button type="button" class="btn btn-outline-dark disabled">
-        {{member}}
-      </button>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Voting Power</th>
+        </tr>
+      </thead>
+      <tbody *ngFor='let member of members'>
+        <tr>
+          <th scope="row">1</th>
+          <td>{{member.address}}</td>
+          <td>{{member.votingPower}}</td>
+        </tr>
+      </tbody>
+    </table>
+
     </div>
   </div>
 </div>

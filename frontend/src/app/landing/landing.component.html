@@ -4,7 +4,7 @@
       <h3>Join an existing team</h3>
       <div class="input-group mb-3 w-50 mx-auto">
         <input type="text" class="form-control" bg-white placeholder="0x.." aria-label="Team's address"
-          aria-describedby="join-team" [(ngModel)]="contractAddress">
+          aria-describedby="join-team" [(ngModel)]="contractAddress" (keyup.enter)="joinTeam()">
         <div class="input-group-append">
           <button type="button" class="btn btn-secondary" (click)='joinTeam()'>Join</button>
         </div>
@@ -15,13 +15,13 @@
     </div>
     <div *ngIf="teamDaoService.contractAddress">
       <h3>
-        Current team
+        Currently viewing team
       </h3>
       <button type="button" class="btn btn-outline-dark disabled">
         {{teamDaoService.contractAddress}}
       </button>
       <br><br><br><br>
-      <button type="button" class="btn btn-secondary" (click)='switchTeam()'>Switch team</button>
+      <button type="button" class="btn btn-warning" (click)='switchTeam()'>Switch team</button>
     </div>
   </div>
 </div>
