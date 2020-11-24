@@ -14,6 +14,7 @@ import { LandingComponent } from './landing/landing.component';
 import { MembersComponent } from './members/members.component';
 import { ProposalsComponent } from './proposals/proposals.component';
 import { ActiveVotesComponent } from './active-votes/active-votes.component';
+import { AutofocusDirective } from './directives/autofocus.directive';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { ActiveVotesComponent } from './active-votes/active-votes.component';
     LandingComponent,
     MembersComponent,
     ProposalsComponent,
-    ActiveVotesComponent
+    ActiveVotesComponent,
+    AutofocusDirective
   ],
   imports: [
     ReactiveFormsModule,

@@ -1,5 +1,36 @@
 <div *ngIf="metaMaskService.address">
   <div class="jumbotron min-vh-100 text-center m-0 d-flex flex-column justify-content-center">
-    <p>proposals works!</p>
+    <h3>Proposals</h3>
+    <br>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col" class="text-left">Member</th>
+          <th scope="col" class="text-left">Proposal</th>
+          <th scope="col" class="text-left">Type</th>
+          <th scope="col" class="text-center">Support</th>
+          <th scope="col" class="text-center"></th>
+        </tr>
+      </thead>
+      <tbody *ngFor='let proposal of proposals'>
+        <tr>
+          <td class="text-left">{{metaMaskService.addressShort(proposal.address)}}</td>
+          <td class="text-left">{{proposal.name}}</td>
+          <td class="text-left">{{proposal.name ? teamDaoService.proposalType(proposal.proposalType): ''}}</td>
+          <td class="text-center align-middle">
+            <div class="progress" style="height:20px" *ngIf='proposal.name'>
+              <div class="progress-bar bg-success background-color:red" role="progressbar" style="width: 25%;height:20px" aria-valuenow="25"
+                aria-valuemin="0" aria-valuemax="100">25%</div>
+            </div>
+          </td>
+          <td class="text-right"><button type="button" class="btn btn-primary" *ngIf='proposal.name'>
+              Details
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
   </div>
 </div>

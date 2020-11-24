@@ -4,7 +4,7 @@
       <h3>Join an existing team</h3>
       <div class="input-group mb-3 w-50 mx-auto">
         <input type="text" class="form-control" bg-white placeholder="0x.." aria-label="Team's address"
-          aria-describedby="join-team" [(ngModel)]="contractAddress" (keyup.enter)="joinTeam()">
+          aria-describedby="join-team" [(ngModel)]="contractAddress" (keyup.enter)="joinTeam()" appAutofocus>
         <div class="input-group-append">
           <button type="button" class="btn btn-secondary" (click)='joinTeam()'>Join</button>
         </div>

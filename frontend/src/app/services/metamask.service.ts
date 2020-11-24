@@ -48,8 +48,8 @@ export class MetaMaskService {
   }
 
   // Return address in short format
-  addressShort(): string {
-    return this.address.slice(0, 6) + '...' + this.address.slice(-4);
+  addressShort(address: string): string {
+    return address.slice(0, 6) + '...' + address.slice(-4);
   }
 
   // Translate network name according to chainId

@@ -9,15 +9,26 @@ import { Router } from '@angular/router';
   styleUrls: ['./proposals.component.css']
 })
 export class ProposalsComponent implements OnInit {
+  proposals: any[] = [];
 
   constructor(
     public metaMaskService: MetaMaskService,
     public teamDaoService: TeamDaoService,
     private router: Router) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     if (!this.teamDaoService.contractAddress) {
       this.router.navigateByUrl('/landing', { replaceUrl: true });
+    } else {
+      try {
+        this.proposals = await this.teamDaoService.getProposals();
+        console.log(this.proposals)
+      } catch (err) {
+        console.log(err);
+        this.teamDaoService.setContract('');
+        this.router.navigateByUrl('/landing', { replaceUrl: true });
+        alert('Error reading contract');
+      }
     }
   }
 

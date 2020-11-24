@@ -30,10 +30,11 @@ export class TeamDaoService {
   async getMembers(): Promise<any[]> {
     const totalMembers = await this.contract.totalMembers();
     const res: any[] = [];
-    for (let i = 0; i < totalMembers; i++) {
-      const address = await this.contract.members(i);
+    for (let index = 1; index <= totalMembers; index++) {
+      const address = await this.contract.members(index - 1);
       const votingPower = await this.contract.votingPower(address);
       res.push({
+        index,
         address,
         votingPower
       });
@@ -41,4 +42,48 @@ export class TeamDaoService {
     return res;
   }
 
+  async getProposals(): Promise<any> {
+    const totalMembers = await this.contract.totalMembers();
+    const res: any[] = [];
+    for (let i = 0; i < totalMembers; i++) {
+      const address = await this.contract.members(i);
+      const proposalFields = await this.contract.getProposal(address);
+      res.push({
+        address,
+        ...proposalFields
+      });
+    }
+    return res;
+  }
+
+  proposalType(type: number): string {
+    switch (type) {
+      case 0:
+        return 'Set Quorum Percentage';
+      case 1:
+        return 'Add Member';
+      case 2:
+        return 'Remove Member';
+      case 3:
+        return 'Vote';
+      case 4:
+        return 'Set Individual Voting Power';
+      case 5:
+        return 'Set Default Voting Power';
+      default:
+        return '';
+    }
+  }
 }
+
+/*
+string memory name,
+VotingToken votingToken,
+ProposalType proposalType,
+address[] memory quorum,
+uint256 startTime,
+uint256 endTime,
+address payloadAddress,
+uint256 payloadNumber,
+bytes32[] memory votingOptions
+*/

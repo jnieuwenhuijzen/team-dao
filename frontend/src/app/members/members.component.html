@@ -2,25 +2,21 @@
   <div class="jumbotron min-vh-100 text-center m-0 d-flex flex-column justify-content-center">
     <h3>Team members</h3>
     <br>
-    <div *ngFor="let member of members">
-
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">Name</th>
-          <th scope="col">Voting Power</th>
+          <th scope="col" class="text-right">#</th>
+          <th scope="col" class="text-left">Address</th>
+          <th scope="col" class="text-right">Voting Power</th>
         </tr>
       </thead>
       <tbody *ngFor='let member of members'>
         <tr>
-          <th scope="row">1</th>
-          <td>{{member.address}}</td>
-          <td>{{member.votingPower}}</td>
+          <th class="text-right" scope="row">{{member.index}}</th>
+          <td class="text-left">{{member.address}}</td>
+          <td class="text-right">{{member.votingPower}}</td>
         </tr>
       </tbody>
     </table>
-
-    </div>
   </div>
 </div>

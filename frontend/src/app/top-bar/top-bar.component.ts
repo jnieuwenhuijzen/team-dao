@@ -15,7 +15,7 @@ export class TopBarComponent implements OnInit {
   getAddressValue(): string {
     return (this.metaMaskService.network
       ? this.metaMaskService.network + ' - ' : '')
-      + this.metaMaskService.addressShort();
+      + this.metaMaskService.addressShort(this.metaMaskService.address);
   }
 
 }
