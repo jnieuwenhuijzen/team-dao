@@ -8,7 +8,6 @@
         <thead>
           <tr>
             <th scope="col" class="text-left">Member</th>
-            <th scope="col" class="text-left">Proposal</th>
             <th scope="col" class="text-left">Type</th>
             <th scope="col" class="text-center">Quorum {{quorumPercentage}}%</th>
             <th scope="col" class="text-center"></th>
@@ -17,21 +16,20 @@
         <tbody *ngFor='let proposal of proposals'>
           <tr *ngIf='proposal.name'>
             <td class="text-left align-middle">{{metaMaskService.addressShort(proposal.address)}}</td>
-            <td class="text-left align-middle">{{proposal.name}}</td>
             <td class="text-left align-middle">{{teamDaoService.proposalType(proposal.proposalType)}}</td>
             <td class="text-center align-middle">
               <div class="progress" style="height:20px">
                 <div class="progress-bar bg-success background-color:red" role="progressbar"
-                  style="width: {{getQuorumReach(proposal)}}%;height:20px"
-                  aria-valuenow="{{getQuorumReach(proposal)}}"
-                  aria-valuemin="0"
-                  aria-valuemax="100">
-                  {{getQuorum(proposal)}}%
+                  style="width:{{getQuorumReach(proposal)}}%;height:20px" aria-valuenow="{{getQuorumReach(proposal)}}"
+                  aria-valuemin="0" aria-valuemax="100">
+                  {{getQuorum(proposal)}}
                 </div>
               </div>
             </td>
             <td class="text-right">
-              <button type="button" class="btn btn-sm btn-secondary mr-1">
+              <button type="button" class="btn btn-sm btn-secondary mr-1" data-toggle="collapse"
+                data-target="#collapseDetails" aria-expanded="false" aria-controls="collapseDetails"
+                (click)='setDetails(proposal)'>
                 Details
               </button>
               <button type="button" class="btn btn-sm btn-warning"
@@ -46,6 +44,43 @@
           </tr>
         </tbody>
       </table>
+      <div class="collapse" id="collapseDetails">
+        <table class="table table-sm table-secondary">
+          <thead class="thead-dark">
+            <tr>
+              <th colspan=2 class="text-left">
+                Details Proposal from {{details.address}}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left">
+                Type
+              </td>
+              <td class="text-left">
+                {{teamDaoService.proposalType(details.proposalType)}}
+              </td>
+            </tr>
+            <tr *ngIf='details.proposalType === 1 || details.proposalType === 2 || details.proposalType === 4'>
+              <td class="text-left">
+                Target Address
+              </td>
+              <td class="text-left">
+                {{details.payloadAddress}}
+              </td>
+            </tr>
+            <tr *ngIf='details.proposalType === 0 || details.proposalType === 4 || details.proposalType === 5'>
+              <td class="text-left">
+                Amount
+              </td>
+              <td class="text-left">
+                {{details.payloadNumber}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <h3>Create Proposal</h3>
     <br>
@@ -53,27 +88,68 @@
       <div class="btn-group float-left">
         <button type="button" class="btn btn-secondary dropdown-toggle float-left" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
-          {{createProposalType || 'Proposal Type'}}
+          {{teamDaoService.proposalType(createProposalType) || 'Proposal Type'}}
         </button>
         <div class="dropdown-menu">
-          <button class="dropdown-item btn-secondary rounded" (click)='initiateAddMember()'>Add Member</button>
-          <a class="dropdown-item btn-danger rounded">Remove Member</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item btn-danger rounded">Set default Voting Power</a>
-          <a class="dropdown-item btn-danger rounded">Set Individual Voting Power</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item btn-danger rounded">Create Vote</a>
+          <a *ngFor='let i of [0,1,2,3,4,5]' class="dropdown-item btn-secondary rounded"
+            (click)='setProposalType(i)'>{{teamDaoService.proposalType(i)}}</a>
         </div>
       </div>
-      <div *ngIf='createProposalType==="Add Member"'>
+      <!-- Set Quorum Percentage -->
+      <div *ngIf='createProposalType===0'>
+        <div class="input-group mb-3 w-25 mx-auto float-right">
+          <input type="text" class="form-control" bg-white placeholder="0 - 100" aria-label="Member's address"
+            aria-describedby="set-quorum-percentage" [(ngModel)]="inputNumber"
+            (keyup.enter)="proposeSetQuorumPercentage()" appAutofocus>
+          <div class="input-group-append">
+            <button type="button" class="btn btn-warning" (click)='proposeSetQuorumPercentage()'>Propose</button>
+          </div>
+        </div>
+      </div>
+      <!-- Add Member -->
+      <div *ngIf='createProposalType===1'>
         <div class="input-group mb-3 w-75 mx-auto float-right">
           <input type="text" class="form-control" bg-white placeholder="0x.." aria-label="Member's address"
-            aria-describedby="join-team" [(ngModel)]="inputAddress" (keyup.enter)="proposeAddMember()" appAutofocus>
+            aria-describedby="add-member" [(ngModel)]="inputAddress" (keyup.enter)="proposeAddMember()" appAutofocus>
           <div class="input-group-append">
             <button type="button" class="btn btn-warning" (click)='proposeAddMember()'>Propose</button>
           </div>
         </div>
       </div>
+      <!-- Remove Member -->
+      <div *ngIf='createProposalType===2'>
+        <div class="input-group mb-3 w-75 mx-auto float-right">
+          <input type="text" class="form-control" bg-white placeholder="0x.." aria-label="Member's address"
+            aria-describedby="remove-member" [(ngModel)]="inputAddress" (keyup.enter)="proposeRemoveMember()"
+            appAutofocus>
+          <div class="input-group-append">
+            <button type="button" class="btn btn-warning" (click)='proposeRemoveMember()'>Propose</button>
+          </div>
+        </div>
+      </div>
+      <!-- Set Individual Voting Power -->
+      <div *ngIf='createProposalType===4'>
+        <div class="input-group mb-3 w-25 mx-auto float-right">
+          <input type="text" class="form-control" bg-white placeholder="0 - 100" aria-label="Member's address"
+            aria-describedby="set-individual-voting-power" [(ngModel)]="inputNumber"
+            (keyup.enter)="proposeSetIndividualVotingPower()" appAutofocus>
+          <div class="input-group-append">
+            <button type="button" class="btn btn-warning" (click)='proposeSetIndividualVotingPower()'>Propose</button>
+          </div>
+        </div>
+      </div>
+      <!-- Set Default Voting Power -->
+      <div *ngIf='createProposalType===5'>
+        <div class="input-group mb-3 w-25 mx-auto float-right">
+          <input type="text" class="form-control" bg-white placeholder="0 - 100" aria-label="Member's address"
+            aria-describedby="set-default-voting-power" [(ngModel)]="inputNumber"
+            (keyup.enter)="proposeSetDefaultVotingPower()" appAutofocus>
+          <div class="input-group-append">
+            <button type="button" class="btn btn-warning" (click)='proposeSetDefaultVotingPower()'>Propose</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

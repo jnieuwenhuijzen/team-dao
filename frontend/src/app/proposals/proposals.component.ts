@@ -12,12 +12,11 @@ export class ProposalsComponent implements OnInit {
   proposals: any[] = [];
   quorumPercentage = 0;
   totalMembers = 0;
-  createProposalType = '';
+  createProposalType = -1;
   inputAddress = '';
+  inputNumber = 0;
+  details = {};
 
-  getCreateProposalType(): string {
-    return this.createProposalType;
-  }
   constructor(
     public metaMaskService: MetaMaskService,
     public teamDaoService: TeamDaoService,
@@ -42,20 +41,42 @@ export class ProposalsComponent implements OnInit {
     }
   }
 
-  getQuorum(proposal: any): number {
-    return Math.floor(proposal.quorum.length / this.totalMembers * 100);
+  setDetails(proposal: any): void {
+    this.details = proposal;
+    console.log(proposal);
+  }
+
+  getQuorum(proposal: any): string {
+    return `${proposal.quorum.length} / ${this.totalMembers}`;
+    // return `${Math.floor(proposal.quorum.length / this.totalMembers * 100)}%`;
   }
 
   getQuorumReach(proposal: any): number {
     return Math.floor(proposal.quorum.length / this.totalMembers * 100 * 100 / this.quorumPercentage);
   }
 
-  initiateAddMember(): void {
-    this.createProposalType = 'Add Member';
+  setProposalType(type: number): void {
+    this.createProposalType = type;
+  }
+
+  async proposeSetQuorumPercentage(): Promise<void> {
+    await this.teamDaoService.proposeSetQuorumPercentage('v0.1', this.inputNumber);
   }
 
   async proposeAddMember(): Promise<void> {
     await this.teamDaoService.proposeAddMember('v0.1', this.inputAddress);
+  }
+
+  async proposeRemoveMember(): Promise<void> {
+    await this.teamDaoService.proposeRemoveMember('v0.1', this.inputAddress);
+  }
+
+  async proposeSetIndividualVotingPower(): Promise<void> {
+    await this.teamDaoService.proposeSetIndividualVotingPower('v0.1', this.inputNumber);
+  }
+
+  async proposeSetDefaultVotingPower(): Promise<void> {
+    await this.teamDaoService.proposeSetDefaultVotingPower('v0.1', this.inputNumber);
   }
 
   async removeProposal(): Promise<void> {

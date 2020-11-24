@@ -8,7 +8,7 @@
     "test": "npx ng test",
     "lint": "npx ng lint",
     "e2e": "npx ng e2e",
-    "ganache": "ganache-cli -m \"$(cat ../team-dao/.mnemonic)\""
+    "ganache": "ganache-cli -m \"$(cat ../team-dao/.mnemonic)\" | grep -v Mnemonic"
   },
   "private": true,
   "dependencies": {

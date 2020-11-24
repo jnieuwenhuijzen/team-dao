@@ -50,8 +50,24 @@ export class TeamDaoService {
     return res;
   }
 
+  async proposeSetQuorumPercentage(name: string, percentage: number): Promise<any> {
+    return await this.contract.proposeSetQuorumPercentage(name, percentage);
+  }
+
   async proposeAddMember(name: string, address: string): Promise<any> {
     return await this.contract.proposeAddMember(name, address);
+  }
+
+  async proposeRemoveMember(name: string, address: string): Promise<any> {
+    return await this.contract.proposeRemoveMember(name, address);
+  }
+
+  async proposeSetIndividualVotingPower(name: string, votingPower: number): Promise<any> {
+    return await this.contract.proposeSetIndividualVotingPower(name, votingPower);
+  }
+
+  async proposeSetDefaultVotingPower(name: string, votingPower: number): Promise<any> {
+    return await this.contract.proposeSetDefaultVotingPower(name, votingPower);
   }
 
   async getProposals(): Promise<any> {
