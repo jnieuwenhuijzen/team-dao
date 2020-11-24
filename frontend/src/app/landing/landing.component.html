@@ -11,7 +11,7 @@
       </div>
       <br>
       <h3>Or create a new team</h3>
-      <button type="button" class="btn btn-secondary w-50 mx-auto" (click)='createTeam()'>Create</button>
+      <button type="button" class="btn btn-warning w-50 mx-auto" (click)='createTeam()'>Create</button>
     </div>
     <div *ngIf="teamDaoService.contractAddress">
       <h3>
@@ -21,7 +21,7 @@
         {{teamDaoService.contractAddress}}
       </button>
       <br><br><br><br>
-      <button type="button" class="btn btn-warning" (click)='switchTeam()'>Switch team</button>
+      <button type="button" class="btn btn-secondary" (click)='switchTeam()'>Switch team</button>
     </div>
   </div>
 </div>

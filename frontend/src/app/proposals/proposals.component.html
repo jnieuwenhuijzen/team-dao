@@ -1,36 +1,79 @@
 <div *ngIf="metaMaskService.address">
   <div class="jumbotron min-vh-100 text-center m-0 d-flex flex-column justify-content-center">
-    <h3>Proposals</h3>
+    <div class="jumbotron">
+      <h3>Outstanding Proposals</h3>
+      <br>
+
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th scope="col" class="text-left">Member</th>
+            <th scope="col" class="text-left">Proposal</th>
+            <th scope="col" class="text-left">Type</th>
+            <th scope="col" class="text-center">Quorum {{quorumPercentage}}%</th>
+            <th scope="col" class="text-center"></th>
+          </tr>
+        </thead>
+        <tbody *ngFor='let proposal of proposals'>
+          <tr *ngIf='proposal.name'>
+            <td class="text-left align-middle">{{metaMaskService.addressShort(proposal.address)}}</td>
+            <td class="text-left align-middle">{{proposal.name}}</td>
+            <td class="text-left align-middle">{{teamDaoService.proposalType(proposal.proposalType)}}</td>
+            <td class="text-center align-middle">
+              <div class="progress" style="height:20px">
+                <div class="progress-bar bg-success background-color:red" role="progressbar"
+                  style="width: {{getQuorumReach(proposal)}}%;height:20px"
+                  aria-valuenow="{{getQuorumReach(proposal)}}"
+                  aria-valuemin="0"
+                  aria-valuemax="100">
+                  {{getQuorum(proposal)}}%
+                </div>
+              </div>
+            </td>
+            <td class="text-right">
+              <button type="button" class="btn btn-sm btn-secondary mr-1">
+                Details
+              </button>
+              <button type="button" class="btn btn-sm btn-warning"
+                *ngIf='proposal.address.toLowerCase() !== metaMaskService.address' (click)='support(proposal.address)'>
+                Support
+              </button>
+              <button type="button" class="btn btn-sm btn-danger"
+                *ngIf='proposal.address.toLowerCase() === metaMaskService.address' (click)='removeProposal()'>
+                Remove
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Create Proposal</h3>
     <br>
-
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col" class="text-left">Member</th>
-          <th scope="col" class="text-left">Proposal</th>
-          <th scope="col" class="text-left">Type</th>
-          <th scope="col" class="text-center">Support</th>
-          <th scope="col" class="text-center"></th>
-        </tr>
-      </thead>
-      <tbody *ngFor='let proposal of proposals'>
-        <tr>
-          <td class="text-left">{{metaMaskService.addressShort(proposal.address)}}</td>
-          <td class="text-left">{{proposal.name}}</td>
-          <td class="text-left">{{proposal.name ? teamDaoService.proposalType(proposal.proposalType): ''}}</td>
-          <td class="text-center align-middle">
-            <div class="progress" style="height:20px" *ngIf='proposal.name'>
-              <div class="progress-bar bg-success background-color:red" role="progressbar" style="width: 25%;height:20px" aria-valuenow="25"
-                aria-valuemin="0" aria-valuemax="100">25%</div>
-            </div>
-          </td>
-          <td class="text-right"><button type="button" class="btn btn-primary" *ngIf='proposal.name'>
-              Details
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
+    <div class="jumbotron border border-secondary rounded bg-light">
+      <div class="btn-group float-left">
+        <button type="button" class="btn btn-secondary dropdown-toggle float-left" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          {{createProposalType || 'Proposal Type'}}
+        </button>
+        <div class="dropdown-menu">
+          <button class="dropdown-item btn-secondary rounded" (click)='initiateAddMember()'>Add Member</button>
+          <a class="dropdown-item btn-danger rounded">Remove Member</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item btn-danger rounded">Set default Voting Power</a>
+          <a class="dropdown-item btn-danger rounded">Set Individual Voting Power</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item btn-danger rounded">Create Vote</a>
+        </div>
+      </div>
+      <div *ngIf='createProposalType==="Add Member"'>
+        <div class="input-group mb-3 w-75 mx-auto float-right">
+          <input type="text" class="form-control" bg-white placeholder="0x.." aria-label="Member's address"
+            aria-describedby="join-team" [(ngModel)]="inputAddress" (keyup.enter)="proposeAddMember()" appAutofocus>
+          <div class="input-group-append">
+            <button type="button" class="btn btn-warning" (click)='proposeAddMember()'>Propose</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

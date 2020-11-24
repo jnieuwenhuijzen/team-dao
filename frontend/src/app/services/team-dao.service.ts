@@ -13,7 +13,10 @@ export class TeamDaoService {
   private contract: any = undefined;
   contractAddress = '';
 
+  cache: any = {};
+
   provider = new ethers.providers.Web3Provider(this.metaMaskService.ethereum);
+  signer = this.provider.getSigner();
 
   constructor(private metaMaskService: MetaMaskService) {
   }
@@ -22,9 +25,13 @@ export class TeamDaoService {
     if (address === '') {
       this.contract = undefined;
     } else {
-      this.contract = new ethers.Contract(address, teamDaoAbi, this.provider);
+      this.contract = new ethers.Contract(address, teamDaoAbi, this.signer);
     }
     this.contractAddress = address;
+  }
+
+  async totalMembers(): Promise<number> {
+    return await this.contract.totalMembers();
   }
 
   async getMembers(): Promise<any[]> {
@@ -36,10 +43,15 @@ export class TeamDaoService {
       res.push({
         index,
         address,
-        votingPower
+        votingPower,
       });
     }
+    this.cache.members = res;
     return res;
+  }
+
+  async proposeAddMember(name: string, address: string): Promise<any> {
+    return await this.contract.proposeAddMember(name, address);
   }
 
   async getProposals(): Promise<any> {
@@ -53,6 +65,21 @@ export class TeamDaoService {
         ...proposalFields
       });
     }
+    this.cache.proposals = res;
+    return res;
+  }
+
+  async removeProposal(): Promise<any> {
+    return await this.contract.removeProposal();
+  }
+
+  async supportProposal(address: string): Promise<any> {
+    return await this.contract.supportProposal(address);
+  }
+
+  async getQuorumPercentage(): Promise<number> {
+    const res: number = await this.contract.quorumPercentage();
+    this.cache.quorumPercentage = res;
     return res;
   }
 
@@ -75,6 +102,9 @@ export class TeamDaoService {
     }
   }
 }
+
+
+
 
 /*
 string memory name,

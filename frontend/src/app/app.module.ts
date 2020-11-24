@@ -9,7 +9,6 @@ import { VotingTokenService } from './services/voting-token.service';
 
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
-import { CanvasComponent } from './canvas/canvas.component';
 import { LandingComponent } from './landing/landing.component';
 import { MembersComponent } from './members/members.component';
 import { ProposalsComponent } from './proposals/proposals.component';
@@ -20,7 +19,6 @@ import { AutofocusDirective } from './directives/autofocus.directive';
   declarations: [
     AppComponent,
     TopBarComponent,
-    CanvasComponent,
     LandingComponent,
     MembersComponent,
     ProposalsComponent,
