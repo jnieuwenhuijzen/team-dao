@@ -93,6 +93,10 @@ export class TeamDaoService {
     return await this.contract.supportProposal(address);
   }
 
+  async activateProposal(address: string): Promise<any> {
+    return await this.contract.activateProposal(address);
+  }
+
   async getQuorumPercentage(): Promise<number> {
     const res: number = await this.contract.quorumPercentage();
     this.cache.quorumPercentage = res;

@@ -33,13 +33,17 @@
                 (click)='setDetails(proposal)'>
                 Details
               </button>
-              <button type="button" class="btn btn-sm btn-warning"
+              <button type="button" class="btn btn-sm mr-1 btn-warning"
                 *ngIf='proposal.address.toLowerCase() !== metaMaskService.address' (click)='support(proposal.address)'>
                 Support
               </button>
-              <button type="button" class="btn btn-sm btn-danger"
+              <button type="button" class="btn btn-sm mr-1 btn-danger"
                 *ngIf='proposal.address.toLowerCase() === metaMaskService.address' (click)='removeProposal()'>
                 Remove
+              </button>
+              <button type="button" class="btn btn-sm mr-1 btn-success"
+                *ngIf='getQuorumReach(proposal) >= 100' (click)='activateProposal(proposal.address)'>
+                Activate
               </button>
             </td>
           </tr>

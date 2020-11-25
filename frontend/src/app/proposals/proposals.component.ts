@@ -113,6 +113,15 @@ export class ProposalsComponent implements OnInit {
     }
   }
 
+  async activateProposal(address: string): Promise<void> {
+    try {
+      await this.teamDaoService.activateProposal(address);
+    } catch (err) {
+      alert(err.data ? err.data.message : err.message);
+      throw (err);
+    }
+  }
+
   async support(address: string): Promise<void> {
     try {
       await this.teamDaoService.supportProposal(address);

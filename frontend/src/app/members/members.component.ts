@@ -23,10 +23,10 @@ export class MembersComponent implements OnInit {
       try {
         this.members = await this.teamDaoService.getMembers();
       } catch (err) {
-        console.log(err);
         this.teamDaoService.setContract('');
         this.router.navigateByUrl('/landing', { replaceUrl: true });
-        alert('Error reading contract');
+        alert('Cannot read contract');
+        throw(err);
       }
     }
   }
