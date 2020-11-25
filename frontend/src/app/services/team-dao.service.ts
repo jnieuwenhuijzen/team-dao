@@ -62,8 +62,8 @@ export class TeamDaoService {
     return await this.contract.proposeRemoveMember(name, address);
   }
 
-  async proposeSetIndividualVotingPower(name: string, votingPower: number): Promise<any> {
-    return await this.contract.proposeSetIndividualVotingPower(name, votingPower);
+  async proposeSetIndividualVotingPower(name: string, address: string, votingPower: number): Promise<any> {
+    return await this.contract.proposeSetIndividualVotingPower(name, address, votingPower);
   }
 
   async proposeSetDefaultVotingPower(name: string, votingPower: number): Promise<any> {

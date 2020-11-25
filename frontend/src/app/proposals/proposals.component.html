@@ -96,7 +96,7 @@
           {{teamDaoService.proposalType(createProposalType) || 'Proposal Type'}}
         </button>
         <div class="dropdown-menu">
-          <a *ngFor='let i of [0,1,2,3,4,5]' class="dropdown-item btn-secondary rounded"
+          <a *ngFor='let i of [0,1,2,4,5,3]' class="dropdown-item btn-secondary rounded"
             (click)='setProposalType(i)'>{{teamDaoService.proposalType(i)}}</a>
         </div>
       </div>
@@ -114,7 +114,7 @@
       <!-- Add Member -->
       <div *ngIf='createProposalType===1'>
         <div class="input-group mb-3 w-75 mx-auto float-right">
-          <input type="text" class="form-control" bg-white placeholder="0x.." aria-label="Member's address"
+          <input type="text" class="form-control" bg-white placeholder="Address 0x.." aria-label="Member's address"
             aria-describedby="add-member" [(ngModel)]="inputAddress" (keyup.enter)="proposeAddMember()" appAutofocus>
           <div class="input-group-append">
             <button type="button" class="btn btn-warning" (click)='proposeAddMember()'>Propose</button>
@@ -124,7 +124,7 @@
       <!-- Remove Member -->
       <div *ngIf='createProposalType===2'>
         <div class="input-group mb-3 w-75 mx-auto float-right">
-          <input type="text" class="form-control" bg-white placeholder="0x.." aria-label="Member's address"
+          <input type="text" class="form-control" bg-white placeholder="Address 0x.." aria-label="Member's address"
             aria-describedby="remove-member" [(ngModel)]="inputAddress" (keyup.enter)="proposeRemoveMember()"
             appAutofocus>
           <div class="input-group-append">
@@ -134,10 +134,13 @@
       </div>
       <!-- Set Individual Voting Power -->
       <div *ngIf='createProposalType===4'>
-        <div class="input-group mb-3 w-25 mx-auto float-right">
-          <input type="text" class="form-control" bg-white placeholder="0 - ..." aria-label="Member's address"
+        <div class="input-group mb-3 w-50 mx-auto float-right">
+          <input type="text" class="form-control" bg-white placeholder="Address 0x.." aria-label="Member's address"
+            aria-describedby="set-individual-voting-power" [(ngModel)]="inputAddress"
+            (keyup.enter)="proposeSetIndividualVotingPower()" appAutofocus mr-10x70D89caA0Ef814A909bA93d9A105bD86bC6948e4>
+          <input type="text" class="form-control" bg-white placeholder="0 - 2^256" aria-label="Individual Voting Power"
             aria-describedby="set-individual-voting-power" [(ngModel)]="inputNumber"
-            (keyup.enter)="proposeSetIndividualVotingPower()" appAutofocus>
+            (keyup.enter)="proposeSetIndividualVotingPower()">
           <div class="input-group-append">
             <button type="button" class="btn btn-warning" (click)='proposeSetIndividualVotingPower()'>Propose</button>
           </div>
@@ -146,7 +149,7 @@
       <!-- Set Default Voting Power -->
       <div *ngIf='createProposalType===5'>
         <div class="input-group mb-3 w-25 mx-auto float-right">
-          <input type="text" class="form-control" bg-white placeholder="0 - ..." aria-label="Member's address"
+          <input type="text" class="form-control" bg-white placeholder="0 - 2^256" aria-label="Member's address"
             aria-describedby="set-default-voting-power" [(ngModel)]="inputNumber"
             (keyup.enter)="proposeSetDefaultVotingPower()" appAutofocus>
           <div class="input-group-append">

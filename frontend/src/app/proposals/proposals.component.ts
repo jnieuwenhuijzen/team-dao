@@ -14,7 +14,7 @@ export class ProposalsComponent implements OnInit {
   totalMembers = 0;
   createProposalType = -1;
   inputAddress = '';
-  inputNumber = 0;
+  inputNumber = undefined;
   details: any = {};
 
   constructor(
@@ -61,7 +61,7 @@ export class ProposalsComponent implements OnInit {
 
   async proposeSetQuorumPercentage(): Promise<void> {
     try {
-      await this.teamDaoService.proposeSetQuorumPercentage('v0.1', this.inputNumber);
+      await this.teamDaoService.proposeSetQuorumPercentage('v0.1', this.inputNumber || 0);
     } catch (err) {
       alert(err.data ? err.data.message : err.message);
       throw (err);
@@ -88,7 +88,7 @@ export class ProposalsComponent implements OnInit {
 
   async proposeSetIndividualVotingPower(): Promise<void> {
     try {
-      await this.teamDaoService.proposeSetIndividualVotingPower('v0.1', this.inputNumber);
+      await this.teamDaoService.proposeSetIndividualVotingPower('v0.1', this.inputAddress, this.inputNumber || 0);
     } catch (err) {
       alert(err.data ? err.data.message : err.message);
       throw (err);
@@ -97,7 +97,7 @@ export class ProposalsComponent implements OnInit {
 
   async proposeSetDefaultVotingPower(): Promise<void> {
     try {
-      await this.teamDaoService.proposeSetDefaultVotingPower('v0.1', this.inputNumber);
+      await this.teamDaoService.proposeSetDefaultVotingPower('v0.1', this.inputNumber || 0);
     } catch (err) {
       alert(err.data ? err.data.message : err.message);
       throw (err);
