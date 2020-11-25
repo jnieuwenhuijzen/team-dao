@@ -31,13 +31,13 @@
       </button>
     </div>
     <div *ngIf='!metaMaskService.address'>
-      <button type="button" class="btn btn-sm btn-light" (click)='metaMaskService.connect()'>
+      <button type="button" class="btn btn-sm btn-info" (click)='metaMaskService.connect()'>
         <i>Connect MetaMask</i>
       </button>
     </div>
   </div>
   <div *ngIf='!metaMaskService.metaMaskInstalled'>
-    <button type="button" class="btn btn-sm btn-warning">
+    <button type="button" class="btn btn-sm btn-danger">
       <i>No MetaMask!</i>
     </button>
   </div>
