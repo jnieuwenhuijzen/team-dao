@@ -60,30 +60,65 @@ export class ProposalsComponent implements OnInit {
   }
 
   async proposeSetQuorumPercentage(): Promise<void> {
-    await this.teamDaoService.proposeSetQuorumPercentage('v0.1', this.inputNumber);
+    try {
+      await this.teamDaoService.proposeSetQuorumPercentage('v0.1', this.inputNumber);
+    } catch (err) {
+      alert(err.data ? err.data.message : err.message);
+      throw (err);
+    }
   }
 
   async proposeAddMember(): Promise<void> {
-    await this.teamDaoService.proposeAddMember('v0.1', this.inputAddress);
+    try {
+      await this.teamDaoService.proposeAddMember('v0.1', this.inputAddress);
+    } catch (err) {
+      alert(err.data ? err.data.message : err.message);
+      throw (err);
+    }
   }
 
   async proposeRemoveMember(): Promise<void> {
-    await this.teamDaoService.proposeRemoveMember('v0.1', this.inputAddress);
+    try {
+      await this.teamDaoService.proposeRemoveMember('v0.1', this.inputAddress);
+    } catch (err) {
+      alert(err.data ? err.data.message : err.message);
+      throw (err);
+    }
   }
 
   async proposeSetIndividualVotingPower(): Promise<void> {
-    await this.teamDaoService.proposeSetIndividualVotingPower('v0.1', this.inputNumber);
+    try {
+      await this.teamDaoService.proposeSetIndividualVotingPower('v0.1', this.inputNumber);
+    } catch (err) {
+      alert(err.data ? err.data.message : err.message);
+      throw (err);
+    }
   }
 
   async proposeSetDefaultVotingPower(): Promise<void> {
-    await this.teamDaoService.proposeSetDefaultVotingPower('v0.1', this.inputNumber);
+    try {
+      await this.teamDaoService.proposeSetDefaultVotingPower('v0.1', this.inputNumber);
+    } catch (err) {
+      alert(err.data ? err.data.message : err.message);
+      throw (err);
+    }
   }
 
   async removeProposal(): Promise<void> {
-    await this.teamDaoService.removeProposal();
+    try {
+      await this.teamDaoService.removeProposal();
+    } catch (err) {
+      alert(err.data ? err.data.message : err.message);
+      throw (err);
+    }
   }
 
   async support(address: string): Promise<void> {
-    await this.teamDaoService.supportProposal(address);
+    try {
+      await this.teamDaoService.supportProposal(address);
+    } catch (err) {
+      alert(err.data ? err.data.message : err.message);
+      throw (err);
+    }
   }
 }

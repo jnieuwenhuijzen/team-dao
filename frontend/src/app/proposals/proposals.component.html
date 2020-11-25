@@ -20,7 +20,8 @@
             <td class="text-center align-middle">
               <div class="progress" style="height:20px">
                 <div class="progress-bar bg-success background-color:red" role="progressbar"
-                  style='width:{{getQuorumReach(proposal)}}%;height:20px' attr.aria-valuenow="{{getQuorumReach(proposal)}}"
+                  [ngStyle]="{ 'width': getQuorumReach(proposal) + '%', 'height' : '20px' }"
+                  attr.aria-valuenow="{{getQuorumReach(proposal)}}"
                   aria-valuemin="0" aria-valuemax="100">
                   {{getQuorum(proposal)}}
                 </div>
