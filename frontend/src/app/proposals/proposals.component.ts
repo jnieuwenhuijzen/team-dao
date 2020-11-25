@@ -15,7 +15,7 @@ export class ProposalsComponent implements OnInit {
   createProposalType = -1;
   inputAddress = '';
   inputNumber = 0;
-  details = {};
+  details: any = {};
 
   constructor(
     public metaMaskService: MetaMaskService,

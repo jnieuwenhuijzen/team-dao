@@ -20,7 +20,7 @@
             <td class="text-center align-middle">
               <div class="progress" style="height:20px">
                 <div class="progress-bar bg-success background-color:red" role="progressbar"
-                  style="width:{{getQuorumReach(proposal)}}%;height:20px" aria-valuenow="{{getQuorumReach(proposal)}}"
+                  style='width:{{getQuorumReach(proposal)}}%;height:20px' attr.aria-valuenow="{{getQuorumReach(proposal)}}"
                   aria-valuemin="0" aria-valuemax="100">
                   {{getQuorum(proposal)}}
                 </div>
@@ -130,7 +130,7 @@
       <!-- Set Individual Voting Power -->
       <div *ngIf='createProposalType===4'>
         <div class="input-group mb-3 w-25 mx-auto float-right">
-          <input type="text" class="form-control" bg-white placeholder="0 - 100" aria-label="Member's address"
+          <input type="text" class="form-control" bg-white placeholder="0 - ..." aria-label="Member's address"
             aria-describedby="set-individual-voting-power" [(ngModel)]="inputNumber"
             (keyup.enter)="proposeSetIndividualVotingPower()" appAutofocus>
           <div class="input-group-append">
@@ -141,7 +141,7 @@
       <!-- Set Default Voting Power -->
       <div *ngIf='createProposalType===5'>
         <div class="input-group mb-3 w-25 mx-auto float-right">
-          <input type="text" class="form-control" bg-white placeholder="0 - 100" aria-label="Member's address"
+          <input type="text" class="form-control" bg-white placeholder="0 - ..." aria-label="Member's address"
             aria-describedby="set-default-voting-power" [(ngModel)]="inputNumber"
             (keyup.enter)="proposeSetDefaultVotingPower()" appAutofocus>
           <div class="input-group-append">
