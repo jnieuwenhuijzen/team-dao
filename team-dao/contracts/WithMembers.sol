@@ -81,7 +81,10 @@ contract WithMembers {
     {
         uint256 count = 0;
         for (uint256 i = 0; i < quorumMembers.length; ++i) {
-            if (memberIndex[quorumMembers[i]] > 0 && _firstOccurence(i, quorumMembers)) {
+            if (
+                memberIndex[quorumMembers[i]] > 0 &&
+                _firstOccurence(i, quorumMembers)
+            ) {
                 count = SafeMath.add(count, 1);
             }
         }
@@ -92,12 +95,32 @@ contract WithMembers {
     /// @notice Helper function for detecting double support in _quorumReached
     /// @param idx the index of the address to be checked on being first occurence in the list
     /// @param list the list of addresses
-    function _firstOccurence(uint256 idx, address[] memory list) internal pure returns(bool) {
+    function _firstOccurence(uint256 idx, address[] memory list)
+        internal
+        pure
+        returns (bool)
+    {
         for (uint256 i = idx + 1; i < list.length; ++i) {
             if (list[idx] == list[i]) {
                 return false;
             }
         }
         return true;
+    }
+
+    /// @notice Helper function for detecting double support in _quorumReached
+    /// @param x the address to be checked on occurence in list
+    /// @param list the list of addresses
+    function _occurence(address x, address[] memory list)
+        internal
+        pure
+        returns (bool)
+    {
+        for (uint256 i = 0; i < list.length; ++i) {
+            if (x == list[i]) {
+                return true;
+            }
+        }
+        return false;
     }
 }

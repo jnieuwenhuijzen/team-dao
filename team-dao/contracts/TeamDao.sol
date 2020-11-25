@@ -223,6 +223,7 @@ contract TeamDao is WithMembers {
     /// @param proposer the address from the team member whose proposal you want to support
     /// @dev note that the proposal is activated if the quorum is reached
     function supportProposal(address proposer) public onlyMembers {
+        require(!_occurence(msg.sender, proposals[proposer].quorum), "Allready supported proposal!");
         proposals[proposer].quorum.push(msg.sender);
         if (_quorumReached(proposals[proposer].quorum)) {
             activateProposal(proposer);

@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 })
 export class MembersComponent implements OnInit {
   members: any[] = [];
+  defaultVotingPower = 0;
 
   constructor(
     public metaMaskService: MetaMaskService,
@@ -21,12 +22,15 @@ export class MembersComponent implements OnInit {
       this.router.navigateByUrl('/landing', { replaceUrl: true });
     } else {
       try {
-        this.members = await this.teamDaoService.getMembers();
+        [this.members, this.defaultVotingPower] = await Promise.all([
+          this.teamDaoService.getMembers(),
+          this.teamDaoService.defaultVotingPower()
+        ]);
       } catch (err) {
         this.teamDaoService.setContract('');
         this.router.navigateByUrl('/landing', { replaceUrl: true });
         alert('Cannot read contract');
-        throw(err);
+        throw (err);
       }
     }
   }

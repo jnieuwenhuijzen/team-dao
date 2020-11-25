@@ -103,6 +103,12 @@ export class TeamDaoService {
     return res;
   }
 
+  async defaultVotingPower(): Promise<number> {
+    const res: number = await this.contract.defaultVotingPower();
+    this.cache.defaultVotingPower = res;
+    return res;
+  }
+
   proposalType(type: number): string {
     switch (type) {
       case 0:
