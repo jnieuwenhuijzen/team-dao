@@ -21,8 +21,7 @@
               <div class="progress" style="height:20px">
                 <div class="progress-bar bg-success background-color:red" role="progressbar"
                   [ngStyle]="{ 'width': getQuorumReach(proposal) + '%', 'height' : '20px' }"
-                  attr.aria-valuenow="{{getQuorumReach(proposal)}}"
-                  aria-valuemin="0" aria-valuemax="100">
+                  attr.aria-valuenow="{{getQuorumReach(proposal)}}" aria-valuemin="0" aria-valuemax="100">
                   {{getQuorum(proposal)}}
                 </div>
               </div>
@@ -41,8 +40,8 @@
                 *ngIf='proposal.address.toLowerCase() === metaMaskService.address' (click)='removeProposal()'>
                 Remove
               </button>
-              <button type="button" class="btn btn-sm mr-1 btn-success"
-                *ngIf='getQuorumReach(proposal) >= 100' (click)='activateProposal(proposal.address)'>
+              <button type="button" class="btn btn-sm mr-1 btn-success" *ngIf='getQuorumReach(proposal) >= 100'
+                (click)='activateProposal(proposal.address)'>
                 Activate
               </button>
             </td>
@@ -81,6 +80,16 @@
               </td>
               <td class="text-left">
                 {{details.payloadNumber}}
+              </td>
+            </tr>
+            <tr>
+              <td class="text-left text-small">
+                Support
+              </td>
+              <td class="text-left">
+                <span *ngFor='let address of details.quorum'>
+                  {{metaMaskService.addressShort(address)}}
+                </span>
               </td>
             </tr>
           </tbody>
@@ -137,7 +146,8 @@
         <div class="input-group mb-3 w-50 mx-auto float-right">
           <input type="text" class="form-control" bg-white placeholder="Address 0x.." aria-label="Member's address"
             aria-describedby="set-individual-voting-power" [(ngModel)]="inputAddress"
-            (keyup.enter)="proposeSetIndividualVotingPower()" appAutofocus mr-10x70D89caA0Ef814A909bA93d9A105bD86bC6948e4>
+            (keyup.enter)="proposeSetIndividualVotingPower()" appAutofocus
+            mr-10x70D89caA0Ef814A909bA93d9A105bD86bC6948e4>
           <input type="text" class="form-control" bg-white placeholder="0 - 2^256" aria-label="Individual Voting Power"
             aria-describedby="set-individual-voting-power" [(ngModel)]="inputNumber"
             (keyup.enter)="proposeSetIndividualVotingPower()">
