@@ -43,7 +43,6 @@ export class ProposalsComponent implements OnInit {
 
   setDetails(proposal: any): void {
     this.details = proposal;
-    console.log(proposal);
   }
 
   getQuorum(proposal: any): string {
@@ -57,6 +56,15 @@ export class ProposalsComponent implements OnInit {
 
   setProposalType(type: number): void {
     this.createProposalType = type;
+  }
+
+  supported(proposal: any): boolean {
+    for (const address of proposal.quorum) {
+      if (address.toLowerCase() === this.metaMaskService.address) {
+        return true;
+      }
+    }
+    return false;
   }
 
   async proposeSetQuorumPercentage(): Promise<void> {

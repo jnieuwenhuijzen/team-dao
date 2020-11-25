@@ -24,7 +24,13 @@ export class LandingComponent implements OnInit {
     this.router.navigateByUrl('/members', { replaceUrl: true });
   }
 
-  createTeam(): void {
+  async createTeam(): Promise<string> {
+    try {
+      return await this.teamDaoService.deployTeamDao();
+    } catch (err) {
+      alert(err.data ? err.data.message : err.message);
+      throw (err);
+    }
   }
 
   switchTeam(): void {

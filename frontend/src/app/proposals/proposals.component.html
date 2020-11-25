@@ -27,13 +27,8 @@
               </div>
             </td>
             <td class="text-right">
-              <button type="button" class="btn btn-sm btn-secondary mr-1" data-toggle="collapse"
-                data-target="#collapseDetails" aria-expanded="false" aria-controls="collapseDetails"
-                (click)='setDetails(proposal)'>
-                Details
-              </button>
               <button type="button" class="btn btn-sm mr-1 btn-warning"
-                *ngIf='proposal.address.toLowerCase() !== metaMaskService.address' (click)='support(proposal.address)'>
+                *ngIf='proposal.address.toLowerCase() !== metaMaskService.address && !supported(proposal)' (click)='support(proposal.address)'>
                 Support
               </button>
               <button type="button" class="btn btn-sm mr-1 btn-danger"
@@ -43,6 +38,11 @@
               <button type="button" class="btn btn-sm mr-1 btn-success" *ngIf='getQuorumReach(proposal) >= 100'
                 (click)='activateProposal(proposal.address)'>
                 Activate
+              </button>
+              <button type="button" class="btn btn-sm btn-secondary mr-1" data-toggle="collapse"
+                data-target="#collapseDetails" aria-expanded="false" aria-controls="collapseDetails"
+                (click)='setDetails(proposal)'>
+                Details
               </button>
             </td>
           </tr>

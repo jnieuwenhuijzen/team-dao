@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { MetaMaskService } from './metamask.service';
 import { ethers } from 'ethers';
-import { Router } from '@angular/router';
-import { MembersComponent } from '../members/members.component';
 
 // Get the ABI from the truffle project. Expect it to be built
 const teamDaoAbi = require('../../../../team-dao/build/contracts/TeamDao.json').abi;
+const teamDaoBytecode = require('../../../../team-dao/build/contracts/TeamDao.json').bytecode;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -19,6 +19,13 @@ export class TeamDaoService {
   signer = this.provider.getSigner();
 
   constructor(private metaMaskService: MetaMaskService) {
+  }
+
+  async deployTeamDao(): Promise<any> {
+    const contractFactory = new ethers.ContractFactory(teamDaoAbi, teamDaoBytecode, this.signer);
+    const tx = await contractFactory.deploy([100]);
+    this.setContract(tx.address);
+    console.log(tx);
   }
 
   setContract(address: string): void {
