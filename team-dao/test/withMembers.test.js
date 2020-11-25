@@ -61,6 +61,17 @@ contract('TestHelperWithMembers', function (accounts) {
     assert.equal(totalMembers, 2, "Total members after not equal to 2!")
   })
 
+  it("should remove the 'first' member", async () => {
+    await instance.addMember(alice)
+    await instance.removeMember(owner)
+    const totalMembers = await instance.totalMembers()
+    const ownerIsMemberAfter = await instance.isMember(owner)
+    const aliceIsMemberAfter = await instance.isMember(alice)
+    assert.equal(aliceIsMemberAfter, true,  "Alice was removed as a member!")
+    assert.equal(ownerIsMemberAfter, false, "Owner was not removed as a member!")
+    assert.equal(totalMembers, 1, "Total members after not equal to 1!")
+  })
+
   it("should not remove a member who is not already member", async () => {
     await catchRevert(instance.removeMember(alice))
   })
