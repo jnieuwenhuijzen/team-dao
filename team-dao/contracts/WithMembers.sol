@@ -53,7 +53,7 @@ contract WithMembers {
         require(index > 0, "Cannot remove someone that is not member");
         if (index < members.length) {
             address lastMember = members[members.length - 1];
-            members[index] = lastMember;
+            members[index - 1] = lastMember;
             memberIndex[lastMember] = index;
         }
         memberIndex[member] = 0;
