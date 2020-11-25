@@ -72,7 +72,8 @@ contract WithMembers {
 
     /// @notice To check if an array of members reaches quorum
     /// @param quorumMembers the pool of quorum members to be checked
-    /// @dev note that non-existent members are ignored in determining the pool size
+    /// @dev non-existent members are ignored in determining the pool size
+    /// @dev duplicates are detected by only allowing the first occurence of an address
     function _quorumReached(address[] memory quorumMembers)
         internal
         view
@@ -80,11 +81,23 @@ contract WithMembers {
     {
         uint256 count = 0;
         for (uint256 i = 0; i < quorumMembers.length; ++i) {
-            if (memberIndex[quorumMembers[i]] > 0) {
+            if (memberIndex[quorumMembers[i]] > 0 && _firstOccurence(i, quorumMembers)) {
                 count = SafeMath.add(count, 1);
             }
         }
         return (SafeMath.mul(count, 100) >=
             SafeMath.mul(members.length, quorumPercentage));
+    }
+
+    /// @notice Helper function for detecting double support in _quorumReached
+    /// @param idx the index of the address to be checked on being first occurence in the list
+    /// @param list the list of addresses
+    function _firstOccurence(uint256 idx, address[] memory list) internal pure returns(bool) {
+        for (uint256 i = idx + 1; i < list.length; ++i) {
+            if (list[idx] == list[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 }

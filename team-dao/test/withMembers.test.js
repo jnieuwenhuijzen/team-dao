@@ -98,6 +98,13 @@ contract('TestHelperWithMembers', function (accounts) {
     assert.equal(quorumReached3of3, true, "incorrectly not quorumReached for 2 out of 3 / 60%")
   })
 
+  it("should ignore double occurence in quorummembers when calling quorumReached", async () => {
+    await instance.addMember(bob)
+    await instance.addMember(alice)
+    const quorumReached1of3 = await instance.quorumReached([alice, alice])
+    assert.equal(quorumReached1of3, false, "incorrectly quorumReached for 1 out of 3 / 60%")
+  })
+
   it("should recognize addresses as members", async () => {
     await instance.addMember(bob)
     await instance.addMember(alice)
