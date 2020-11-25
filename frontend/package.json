@@ -8,7 +8,8 @@
     "test": "npx ng test",
     "lint": "npx ng lint",
     "e2e": "npx ng e2e",
-    "ganache": "ganache-cli -m \"$(cat ../team-dao/.mnemonic)\" | grep -v Mnemonic"
+    "ganache": "ganache-cli -m \"$(cat ../team-dao/.mnemonic)\" | grep '(100 ETH)'",
+    "migrate": "cd ../team-dao && truffle migrate"
   },
   "private": true,
   "dependencies": {
