@@ -36,16 +36,16 @@ contract TeamDao is WithMembers, Pausable {
 
     address public pauser;
 
-    event Support(
+    event SupportProposal(
         address indexed from,
         address indexed to,
-        string indexed name
+        string name
     );
 
-    event Propose(
+    event CreateProposal(
         address indexed from,
-        string indexed name,
-        ProposalType proposalType,
+        string name,
+        ProposalType indexed proposalType,
         address[] quorum,
         uint256 startTime,
         uint256 endTime,
@@ -54,10 +54,22 @@ contract TeamDao is WithMembers, Pausable {
         bytes32[] votingOptions
     );
 
-    event Activate(
+    event ActivateProposal(
         address indexed from,
         address indexed to,
-        string indexed name
+        string name,
+        ProposalType indexed proposalType,
+        address[] quorum,
+        uint256 startTime,
+        uint256 endTime,
+        address payloadAddress,
+        uint256 payloadNumber,
+        bytes32[] votingOptions
+    );
+
+    event RemoveProposal(
+        address indexed from,
+        string name
     );
 
     /// @notice Construct a new team-dao. Creator becomes the first member, quorum is set to 60%
@@ -243,7 +255,7 @@ contract TeamDao is WithMembers, Pausable {
             votingOptions: _votingOptions
         });
         supportProposal(msg.sender);
-        emit Propose(
+        emit CreateProposal(
             msg.sender,
             _name,
             _proposalType,
@@ -259,6 +271,7 @@ contract TeamDao is WithMembers, Pausable {
     /// @notice Remove your own proposal
     function removeProposal() public onlyMembers whenNotPaused {
         delete proposals[msg.sender];
+        emit RemoveProposal(msg.sender, proposals[msg.sender].name);
     }
 
     /// @notice get the current proposal from a team member
@@ -299,7 +312,7 @@ contract TeamDao is WithMembers, Pausable {
         if (_quorumReached(proposals[proposer].quorum)) {
             activateProposal(proposer);
         }
-        emit Support(msg.sender, proposer, proposals[proposer].name);
+        emit SupportProposal(msg.sender, proposer, proposals[proposer].name);
     }
 
     /// @notice Activate a prososal from a team member
@@ -307,7 +320,17 @@ contract TeamDao is WithMembers, Pausable {
     /// @dev the proposal is deleted after successfully activated, except when it is a vote
     function activateProposal(address proposer) public whenNotPaused {
         require(_quorumReached(proposals[proposer].quorum), "Quorum not reached!");
-        emit Activate(msg.sender, proposer, proposals[proposer].name);
+        emit ActivateProposal(
+            msg.sender,
+            proposer,
+            proposals[proposer].name,
+            proposals[proposer].proposalType,
+            proposals[proposer].quorum,
+            proposals[proposer].startTime,
+            proposals[proposer].endTime,
+            proposals[proposer].payloadAddress,
+            proposals[proposer].payloadNumber,
+            proposals[proposer].votingOptions);
         if (proposals[proposer].proposalType == ProposalType.SetQuorumPercentage) {
             _setQuorumPercentage(proposals[proposer].payloadNumber);
         } else if (proposals[proposer].proposalType == ProposalType.AddMember) {
