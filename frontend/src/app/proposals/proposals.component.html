@@ -105,7 +105,7 @@
           {{teamDaoService.proposalType(createProposalType) || 'Proposal Type'}}
         </button>
         <div class="dropdown-menu">
-          <a *ngFor='let i of [1,2,0,4,5,3]' class="dropdown-item btn-secondary rounded"
+          <a *ngFor='let i of [1,2,0,6,4,5,3]' class="dropdown-item btn-secondary rounded"
             (click)='setProposalType(i)'>{{teamDaoService.proposalType(i)}}</a>
         </div>
       </div>
@@ -167,7 +167,16 @@
           </div>
         </div>
       </div>
-
+      <!-- Set Pauser -->
+      <div *ngIf='createProposalType===6'>
+        <div class="input-group mb-3 w-50 mx-auto float-right">
+          <input type="text" class="form-control" bg-white placeholder="Address 0x.." aria-label="Member's address"
+            aria-describedby="set-pauser" [(ngModel)]="inputAddress" (keyup.enter)="proposeSetPauser()" appAutofocus>
+          <div class="input-group-append">
+            <button type="button" class="btn btn-warning" (click)='proposeSetPauser()'>Propose</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

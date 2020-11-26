@@ -96,7 +96,7 @@ contract TeamDao is WithMembers, Pausable {
         );
     }
 
-    /// @notice Propose to change the quorum percentage of support to activate a proposal
+    /// @notice Propose to add member
     /// @param name An identifier for this proposal
     /// @param newMember The address of the proposed new member
     function proposeAddMember(string memory name, address newMember) public onlyMembers whenNotPaused {

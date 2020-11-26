@@ -113,6 +113,10 @@ export class ProposalsComponent implements OnInit {
     }
   }
 
+  async proposeSetPauser(): Promise<void> {
+    this.teamDaoService.proposeSetPauser('v0.1', this.inputAddress);
+  }
+
   async removeProposal(): Promise<void> {
     try {
       await this.teamDaoService.removeProposal();
