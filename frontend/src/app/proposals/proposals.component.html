@@ -53,7 +53,7 @@
           <thead class="thead-dark">
             <tr>
               <th colspan=2 class="text-left">
-                Details Proposal from {{details.address}}
+                Details Proposal from {{details.address ? metaMaskService.addressShort(details.address) : ''}}
               </th>
             </tr>
           </thead>
@@ -105,13 +105,13 @@
           {{teamDaoService.proposalType(createProposalType) || 'Proposal Type'}}
         </button>
         <div class="dropdown-menu">
-          <a *ngFor='let i of [0,1,2,4,5,3]' class="dropdown-item btn-secondary rounded"
+          <a *ngFor='let i of [1,2,0,4,5,3]' class="dropdown-item btn-secondary rounded"
             (click)='setProposalType(i)'>{{teamDaoService.proposalType(i)}}</a>
         </div>
       </div>
       <!-- Set Quorum Percentage -->
       <div *ngIf='createProposalType===0'>
-        <div class="input-group mb-3 w-25 mx-auto float-right">
+        <div class="input-group mb-3 w-50 mx-auto float-right">
           <input type="text" class="form-control" bg-white placeholder="0 - 100" aria-label="Member's address"
             aria-describedby="set-quorum-percentage" [(ngModel)]="inputNumber"
             (keyup.enter)="proposeSetQuorumPercentage()" appAutofocus>
@@ -122,7 +122,7 @@
       </div>
       <!-- Add Member -->
       <div *ngIf='createProposalType===1'>
-        <div class="input-group mb-3 w-75 mx-auto float-right">
+        <div class="input-group mb-3 w-50 mx-auto float-right">
           <input type="text" class="form-control" bg-white placeholder="Address 0x.." aria-label="Member's address"
             aria-describedby="add-member" [(ngModel)]="inputAddress" (keyup.enter)="proposeAddMember()" appAutofocus>
           <div class="input-group-append">
@@ -132,7 +132,7 @@
       </div>
       <!-- Remove Member -->
       <div *ngIf='createProposalType===2'>
-        <div class="input-group mb-3 w-75 mx-auto float-right">
+        <div class="input-group mb-3 w-50 mx-auto float-right">
           <input type="text" class="form-control" bg-white placeholder="Address 0x.." aria-label="Member's address"
             aria-describedby="remove-member" [(ngModel)]="inputAddress" (keyup.enter)="proposeRemoveMember()"
             appAutofocus>
@@ -158,7 +158,7 @@
       </div>
       <!-- Set Default Voting Power -->
       <div *ngIf='createProposalType===5'>
-        <div class="input-group mb-3 w-25 mx-auto float-right">
+        <div class="input-group mb-3 w-50 mx-auto float-right">
           <input type="text" class="form-control" bg-white placeholder="0 - 2^256" aria-label="Member's address"
             aria-describedby="set-default-voting-power" [(ngModel)]="inputNumber"
             (keyup.enter)="proposeSetDefaultVotingPower()" appAutofocus>

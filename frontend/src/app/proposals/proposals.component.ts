@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MetaMaskService } from '../services/metamask.service';
 import { TeamDaoService } from '../services/team-dao.service';
 import { Router } from '@angular/router';
+import { Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-proposals',
