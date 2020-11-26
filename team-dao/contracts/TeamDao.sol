@@ -1,19 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.6.0 <0.8.0;
 
+import "./openzeppelin/Pausable.sol";
 import "./WithMembers.sol";
 import "./VotingToken.sol";
 
 /// @title A contract for team governance
 /// @author Jarl Nieuwenhuijzen
-contract TeamDao is WithMembers {
+contract TeamDao is WithMembers, Pausable {
     enum ProposalType {
         SetQuorumPercentage,
         AddMember,
         RemoveMember,
         Vote,
         SetIndividualVotingPower,
-        SetDefaultVotingPower
+        SetDefaultVotingPower,
+        SetPauser
     }
 
     struct Proposal {
@@ -32,17 +34,56 @@ contract TeamDao is WithMembers {
     mapping(address => uint256) public votingPower;
     uint256 public defaultVotingPower;
 
+    address public pauser;
+
+    event Support(
+        address indexed from,
+        address indexed to,
+        string indexed name
+    );
+
+    event Propose(
+        address indexed from,
+        string indexed name,
+        ProposalType proposalType,
+        address[] quorum,
+        uint256 startTime,
+        uint256 endTime,
+        address payloadAddress,
+        uint256 payloadNumber,
+        bytes32[] votingOptions
+    );
+
+    event Activate(
+        address indexed from,
+        address indexed to,
+        string indexed name
+    );
+
     /// @notice Construct a new team-dao. Creator becomes the first member, quorum is set to 60%
     /// @param _defaultVotingPower Number of tokens each member gets for each vote is 100 tokens
     constructor(uint256 _defaultVotingPower) public {
         defaultVotingPower = _defaultVotingPower;
         votingPower[msg.sender] = defaultVotingPower;
+        pauser = msg.sender;
+    }
+
+    /// @notice Pauser can pause the contract
+    function pause() public {
+        require (msg.sender == pauser, 'not pauser!');
+        _pause();
+    }
+
+    /// @notice Pauser can unpause the contract
+    function unpause() public {
+        require (msg.sender == pauser, 'not pauser!');
+        _unpause();
     }
 
     /// @notice Propose to change the quorum percentage of support to activate a proposal
     /// @param name An identifier for this proposal
     /// @param quorumPercentage The new proposed quorum percentage
-    function proposeSetQuorumPercentage(string memory name, uint256 quorumPercentage) public onlyMembers {
+    function proposeSetQuorumPercentage(string memory name, uint256 quorumPercentage) public onlyMembers whenNotPaused {
         bytes32[] memory votingOptions;
         _setProposal(
             name,
@@ -58,7 +99,7 @@ contract TeamDao is WithMembers {
     /// @notice Propose to change the quorum percentage of support to activate a proposal
     /// @param name An identifier for this proposal
     /// @param newMember The address of the proposed new member
-    function proposeAddMember(string memory name, address newMember) public onlyMembers {
+    function proposeAddMember(string memory name, address newMember) public onlyMembers whenNotPaused {
         bytes32[] memory votingOptions;
         _setProposal(
             name,
@@ -74,7 +115,7 @@ contract TeamDao is WithMembers {
     /// @notice Propose to remove a member from the team
     /// @param name An identifier for this proposal
     /// @param member The member proposed to remove
-    function proposeRemoveMember(string memory name, address member) public onlyMembers {
+    function proposeRemoveMember(string memory name, address member) public onlyMembers whenNotPaused {
         bytes32[] memory votingOptions;
         _setProposal(
             name,
@@ -95,7 +136,7 @@ contract TeamDao is WithMembers {
     /// @dev Voting is done using a VotingToken.
     /// @dev Each voting option is mapped to unique address
     /// @dev Ideally each option is an IPFS hash, but it can be a string
-    function proposeVote(string memory name, uint256 startTime, uint256 endTime, bytes32[] memory votingOptions) public onlyMembers {
+    function proposeVote(string memory name, uint256 startTime, uint256 endTime, bytes32[] memory votingOptions) public onlyMembers whenNotPaused {
         _setProposal(
             name,
             ProposalType.Vote,
@@ -115,7 +156,7 @@ contract TeamDao is WithMembers {
         string memory name,
         address member,
         uint256 individualVotingPower
-    ) public onlyMembers {
+    ) public onlyMembers whenNotPaused {
         bytes32[] memory votingOptions;
         _setProposal(
             name,
@@ -135,7 +176,7 @@ contract TeamDao is WithMembers {
     function proposeSetDefaultVotingPower(
         string memory name,
         uint256 _defaultVotingPower
-    ) public onlyMembers {
+    ) public onlyMembers whenNotPaused {
         bytes32[] memory votingOptions;
         _setProposal(
             name,
@@ -144,6 +185,25 @@ contract TeamDao is WithMembers {
             0,
             address(0),
             _defaultVotingPower,
+            votingOptions
+        );
+    }
+
+    /// @notice Propose to change the member that can pause the contract
+    /// @param name An identifier for this proposal
+    /// @param member the address of the proposed pauser
+    function proposeSetPauser(
+        string memory name,
+        address member
+    ) public onlyMembers whenNotPaused {
+        bytes32[] memory votingOptions;
+        _setProposal(
+            name,
+            ProposalType.SetPauser,
+            0,
+            0,
+            member,
+            0,
             votingOptions
         );
     }
@@ -183,10 +243,21 @@ contract TeamDao is WithMembers {
             votingOptions: _votingOptions
         });
         supportProposal(msg.sender);
+        emit Propose(
+            msg.sender,
+            _name,
+            _proposalType,
+            initialQuorum,
+            _startTime,
+            _endTime,
+            _payloadAddress,
+            _payloadNumber,
+            _votingOptions
+        );
     }
 
     /// @notice Remove your own proposal
-    function removeProposal() public onlyMembers {
+    function removeProposal() public onlyMembers whenNotPaused {
         delete proposals[msg.sender];
     }
 
@@ -222,19 +293,21 @@ contract TeamDao is WithMembers {
     /// @notice Give support to proposal from another team member
     /// @param proposer the address from the team member whose proposal you want to support
     /// @dev note that the proposal is activated if the quorum is reached
-    function supportProposal(address proposer) public onlyMembers {
+    function supportProposal(address proposer) public onlyMembers whenNotPaused {
         require(!_occurence(msg.sender, proposals[proposer].quorum), "Allready supported proposal!");
         proposals[proposer].quorum.push(msg.sender);
         if (_quorumReached(proposals[proposer].quorum)) {
             activateProposal(proposer);
         }
+        emit Support(msg.sender, proposer, proposals[proposer].name);
     }
 
     /// @notice Activate a prososal from a team member
     /// @param proposer address of the team member whose proposal should be activated
     /// @dev the proposal is deleted after successfully activated, except when it is a vote
-    function activateProposal(address proposer) public {
+    function activateProposal(address proposer) public whenNotPaused {
         require(_quorumReached(proposals[proposer].quorum), "Quorum not reached!");
+        emit Activate(msg.sender, proposer, proposals[proposer].name);
         if (proposals[proposer].proposalType == ProposalType.SetQuorumPercentage) {
             _setQuorumPercentage(proposals[proposer].payloadNumber);
         } else if (proposals[proposer].proposalType == ProposalType.AddMember) {
@@ -249,6 +322,8 @@ contract TeamDao is WithMembers {
             votingPower[(proposals[proposer].payloadAddress)] = proposals[proposer].payloadNumber;
         } else if (proposals[proposer].proposalType == ProposalType.SetDefaultVotingPower) {
             defaultVotingPower = proposals[proposer].payloadNumber;
+        } else if (proposals[proposer].proposalType == ProposalType.SetPauser) {
+            pauser = proposals[proposer].payloadAddress;
         }
         delete proposals[proposer];
     }

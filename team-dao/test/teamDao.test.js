@@ -173,4 +173,37 @@ contract('TeamDao', function(accounts) {
     assert.equal(votingPower, 5, "Votingpower not expected value")
   });
 
+  it("should set initial pauser to creator", async () => {
+    const pauser = await instance.pauser();
+    assert.equal(pauser, alice, "Initials pauser not equal to creator!");
+  })
+
+  it("should only allow pauser to pause the contract", async () => {
+    await catchRevert(instance.pause({from: bob}));
+  })
+
+  it("should only allow pauser to unpause the contract", async () => {
+    await catchRevert(instance.unpause({from: bob}));
+  })
+
+  it("should change pauser upon vote", async () => {
+    await instance.proposeSetPauser("Set pauser to bob!", bob, {from: alice});
+    await instance.supportProposal(alice, {from: bob});
+    const pauser = await instance.pauser();
+    assert.equal(pauser, bob, "Pauser not changed to bob!");
+  })
+
+  it("should pause the contract when paused", async () => {
+    await instance.pause();
+    await catchRevert(instance.proposeSetPauser("try and fail", bob, {from: alice}))
+  })
+
+  it("should unpause", async () => {
+    await instance.pause();
+    await instance.unpause();
+    await instance.proposeSetPauser("try and succeed", bob, { from: alice });
+    await instance.supportProposal(alice, { from: bob });
+    const pauser = await instance.pauser();
+    assert.equal(pauser, bob, "Pauser not changed to bob!");
+  })
 })

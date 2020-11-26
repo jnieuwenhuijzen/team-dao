@@ -77,6 +77,26 @@ export class TeamDaoService {
     return await this.contract.proposeSetDefaultVotingPower(name, votingPower);
   }
 
+  async proposeSetPauser(name: string, address: string): Promise<any> {
+    return await this.contract.proposeSetPauser(name, address);
+  }
+
+  async pause(): Promise<any> {
+    return await this.contract.pause();
+  }
+
+  async unpause(): Promise<any> {
+    return await this.contract.pause();
+  }
+
+  async getPauser(): Promise<string> {
+    return await this.contract.pauser();
+  }
+
+  async pauser(): Promise<boolean> {
+    return await this.contract.paused();
+  }
+
   async getProposals(): Promise<any> {
     const totalMembers = await this.contract.totalMembers();
     const res: any[] = [];
@@ -130,6 +150,8 @@ export class TeamDaoService {
         return 'Set Individual Voting Power';
       case 5:
         return 'Set Default Voting Power';
+      case 6:
+        return 'Set Pauser';
       default:
         return '';
     }
