@@ -27,28 +27,30 @@ export class TeamDaoService {
 
   async deployTeamDao(): Promise<any> {
     const contractFactory = new ethers.ContractFactory(teamDaoAbi, teamDaoBytecode, this.signer);
-    const tx = await contractFactory.deploy([100]);
-    this.setContract(tx.address);
-    console.log(tx);
+    const contract = await contractFactory.deploy([100]);
+    await contract.deployTransaction.wait();
+    this.setContract(contract.address);
+    console.log(contract);
   }
 
   async setContract(address: string): Promise<void> {
     if (address === '') {
       this.contract = undefined;
+      this.contractAddress = address;
     } else {
       this.contract = new ethers.Contract(address, teamDaoAbi, this.signer);
-    }
-    this.contractAddress = address;
-    try {
-      await Promise.all([
-        this.setEvents(),
-        this.getAll()
-      ]);
-    } catch (err) {
-      alert('Error reading contract!');
-      this.contract = undefined;
-      this.contractAddress = '';
-      throw(err);
+      this.contractAddress = address;
+      try {
+        await Promise.all([
+          this.setEvents(),
+          this.getAll()
+        ]);
+      } catch (err) {
+        alert('Error reading contract!');
+        this.contract = undefined;
+        this.contractAddress = '';
+        throw (err);
+      }
     }
   }
 
