@@ -25,10 +25,12 @@ As the TeamDao and VotingToken contract do not call other contracts, it seems im
 ## Denial of Service by Block Gas Limit or startGas (SWC-128)
 
 There are some arrays with undetermined size used in 
-the TeamDao contract. There are 2 arrays used in the `proposal` struct:
+the TeamDao contract. Two arrays are used in the `proposal` struct:
 
  -  `quorum[]`: This part of a proposal is filled using the function `supportProposal`. There is a prerequisite in this function that requires that `msg.sender` is not allready an occurence in the array. 
  -  `votingoptions[]`: This array is created with the creation of the proposal and only by the proposer itself. It can therefor not be used to DoS other proposals than the creation of the proposal itself.
+
+The `WithMembers` library/contract is derived by `TeamDao`. it contains an array `member[]` of undetermined size. The requirement in `_addMember` is that it may not allready be a member. Next to that, Members can only be added if the majority (the quorum) of team members agree.
 
 ## Force Sending Ether
 
