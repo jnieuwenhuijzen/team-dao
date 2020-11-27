@@ -28,9 +28,10 @@ export class TeamDaoService {
   async deployTeamDao(): Promise<any> {
     const contractFactory = new ethers.ContractFactory(teamDaoAbi, teamDaoBytecode, this.signer);
     const contract = await contractFactory.deploy([100]);
+    console.log(`Contract '${contract.address}' is being deployed with transaction '${contract.deployTransaction.hash}'`);
     await contract.deployTransaction.wait();
+    console.log(`Contract '${contract.address}' is deployed`);
     this.setContract(contract.address);
-    console.log(contract);
   }
 
   async setContract(address: string): Promise<void> {
@@ -172,47 +173,50 @@ export class TeamDaoService {
   }
 
   async setEvents(): Promise<void> {
-    this.contract.on('SupportProposal', (from: string, to: string, name: string) => {
-      console.log(`Support from ${from} to ${to} for ${name}`);
-      this.getProposals();
-    });
+    if (this.contract && this.contractAddress) {
+      this.contract.on('SupportProposal', (from: string, to: string, name: string) => {
+        console.log(`Support from ${from} to ${to} for ${name}`);
+        this.getProposals();
+      });
 
-    this.contract.on('CreateProposal', (from: string, name: string) => {
-      console.log(`${from} proposes '${name}'`);
-      this.getProposals();
-    });
+      this.contract.on('CreateProposal', (from: string, name: string) => {
+        console.log(`${from} proposes '${name}'`);
+        this.getProposals();
+      });
 
-    this.contract.on('ActivateProposal', (from: string, proposer: string, name: string, proposalType: number) => {
-      console.log(`${from} activates proposal '${name}' from ${proposer}`);
-      this.getAll();
-    });
+      this.contract.on('ActivateProposal', (from: string, proposer: string, name: string, proposalType: number) => {
+        console.log(`${from} activates proposal '${name}' from ${proposer}`);
+        this.getAll();
+      });
 
-    this.contract.on('RemoveProposal', (from: string, name: string) => {
-      console.log(`${from} removed his proposal '${name}'`);
-      this.getProposals();
-    });
+      this.contract.on('RemoveProposal', (from: string, name: string) => {
+        console.log(`${from} removed his proposal '${name}'`);
+        this.getProposals();
+      });
 
-    this.contract.on('Paused', (from: string) => {
-      console.log(`${from} paused the contract`);
-      this.cache.paused = true;
-    });
+      this.contract.on('Paused', (from: string) => {
+        console.log(`${from} paused the contract`);
+        this.cache.paused = true;
+      });
 
-    this.contract.on('Unpaused', (from: string) => {
-      console.log(`${from} unpaused the contract`);
-      this.cache.paused = false;
-    });
-
+      this.contract.on('Unpaused', (from: string) => {
+        console.log(`${from} unpaused the contract`);
+        this.cache.paused = false;
+      });
+    }
   }
 
   async getAll(): Promise<void> {
-    await Promise.all([
-      this.getPauser(),
-      this.getPaused(),
-      this.getMembers(),
-      this.getProposals(),
-      this.getDefaultVotingPower(),
-      this.getQuorumPercentage()
-    ]);
+    if (this.contract && this.contractAddress) {
+      await Promise.all([
+        this.getPauser(),
+        this.getPaused(),
+        this.getMembers(),
+        this.getProposals(),
+        this.getDefaultVotingPower(),
+        this.getQuorumPercentage()
+      ]);
+    }
   }
 
 }

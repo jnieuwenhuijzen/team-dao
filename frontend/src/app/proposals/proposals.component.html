@@ -48,12 +48,13 @@
           </tr>
         </tbody>
       </table>
-      <div class="collapse" id="collapseDetails">
+      <div class="collapse" id="collapseDetails"
+        *ngIf='teamDaoService.cache.proposals[detailsIdx] && teamDaoService.cache.proposals[detailsIdx].quorum.length > 0'>
         <table class="table table-sm table-secondary">
           <thead class="thead-dark">
             <tr>
               <th colspan=2 class="text-left">
-                Details Proposal from {{details.address ? metaMaskService.addressShort(details.address) : ''}}
+                Details Proposal from {{teamDaoService.cache.proposals[detailsIdx].address ? metaMaskService.addressShort(teamDaoService.cache.proposals[detailsIdx].address) : ''}}
               </th>
             </tr>
           </thead>
@@ -63,23 +64,23 @@
                 Type
               </td>
               <td class="text-left">
-                {{teamDaoService.proposalType(details.proposalType)}}
+                {{teamDaoService.proposalType(teamDaoService.cache.proposals[detailsIdx].proposalType)}}
               </td>
             </tr>
-            <tr *ngIf='details.proposalType === 1 || details.proposalType === 2 || details.proposalType === 4'>
+            <tr *ngIf='teamDaoService.cache.proposals[detailsIdx].proposalType === 1 || teamDaoService.cache.proposals[detailsIdx].proposalType === 2 || teamDaoService.cache.proposals[detailsIdx].proposalType === 4'>
               <td class="text-left">
                 Target Address
               </td>
               <td class="text-left">
-                {{details.payloadAddress}}
+                {{teamDaoService.cache.proposals[detailsIdx].payloadAddress}}
               </td>
             </tr>
-            <tr *ngIf='details.proposalType === 0 || details.proposalType === 4 || details.proposalType === 5'>
+            <tr *ngIf='teamDaoService.cache.proposals[detailsIdx].proposalType === 0 || teamDaoService.cache.proposals[detailsIdx].proposalType === 4 || teamDaoService.cache.proposals[detailsIdx].proposalType === 5'>
               <td class="text-left">
                 Amount
               </td>
               <td class="text-left">
-                {{details.payloadNumber}}
+                {{teamDaoService.cache.proposals[detailsIdx].payloadNumber}}
               </td>
             </tr>
             <tr>
@@ -87,7 +88,7 @@
                 Support
               </td>
               <td class="text-left">
-                <span *ngFor='let address of details.quorum'>
+                <span *ngFor='let address of teamDaoService.cache.proposals[detailsIdx].quorum'>
                   {{metaMaskService.addressShort(address)}}
                 </span>
               </td>
