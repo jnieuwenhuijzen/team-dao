@@ -10,7 +10,7 @@ Requirements are used and placed as early as possible in all contract functions.
 
 The functions `_setProposal` and `createVote` from the contract [TeamDao.sol](https://github.com/jnieuwenhuijzen/team-dao/blob/master/team-dao/contracts/TeamDao.sol) are made `internal`. Although `private` would be an option, the functions are made `internal` to make derivation possible.
 
-In [WithMembers.sol](https://github.com/jnieuwenhuijzen/team-dao/blob/master/team-dao/contracts/WithMembers.sol) the functions `_addMember`, `_removeMember`, `, `_setQuorumPercentage`, `_quorumReached` and the helper functions `_firstOccurence` and `occurence` are all internal. These functions are derived and only to be executed by the `TeamDao.sol` contract.
+In [WithMembers.sol](https://github.com/jnieuwenhuijzen/team-dao/blob/master/team-dao/contracts/WithMembers.sol) the functions `_addMember`, `_removeMember`, `_setQuorumPercentage`, `_quorumReached` and the helper functions `_firstOccurence` and `occurence` are all internal. These functions are derived and only to be executed by the `TeamDao.sol` contract.
 
 The contract [VotingToken.sol](https://github.com/jnieuwenhuijzen/team-dao/blob/master/team-dao/contracts/VotingToken.sol) derives from the Openzeppelin contract `ERC20Burnable`. It uses the hook `_BeforeTokenTransfer` to implement some prerequisites before transferring. This function is also `internal`.
 
