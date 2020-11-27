@@ -13,13 +13,17 @@ export class TeamDaoService {
   private contract: any = undefined;
   contractAddress = '';
 
-  cache: any = {};
+  // Blockchain parameters that are updated on basis of events
+  cache: any = {
+    paused: false,
+    pauser: '',
+    members: []
+  };
 
   provider = new ethers.providers.Web3Provider(this.metaMaskService.ethereum);
   signer = this.provider.getSigner();
 
-  constructor(private metaMaskService: MetaMaskService) {
-  }
+  constructor(private metaMaskService: MetaMaskService) { }
 
   async deployTeamDao(): Promise<any> {
     const contractFactory = new ethers.ContractFactory(teamDaoAbi, teamDaoBytecode, this.signer);
@@ -28,33 +32,24 @@ export class TeamDaoService {
     console.log(tx);
   }
 
-  setContract(address: string): void {
+  async setContract(address: string): Promise<void> {
     if (address === '') {
       this.contract = undefined;
     } else {
       this.contract = new ethers.Contract(address, teamDaoAbi, this.signer);
     }
     this.contractAddress = address;
-  }
-
-  async totalMembers(): Promise<number> {
-    return await this.contract.totalMembers();
-  }
-
-  async getMembers(): Promise<any[]> {
-    const totalMembers = await this.contract.totalMembers();
-    const res: any[] = [];
-    for (let index = 1; index <= totalMembers; index++) {
-      const address = await this.contract.members(index - 1);
-      const votingPower = await this.contract.votingPower(address);
-      res.push({
-        index,
-        address,
-        votingPower,
-      });
+    try {
+      await Promise.all([
+        this.setEvents(),
+        this.getAll()
+      ]);
+    } catch (err) {
+      alert('Error reading contract!');
+      this.contract = undefined;
+      this.contractAddress = '';
+      throw(err);
     }
-    this.cache.members = res;
-    return res;
   }
 
   async proposeSetQuorumPercentage(name: string, percentage: number): Promise<any> {
@@ -86,15 +81,34 @@ export class TeamDaoService {
   }
 
   async unpause(): Promise<any> {
-    return await this.contract.pause();
+    return await this.contract.unpause();
+  }
+
+  async getMembers(): Promise<any[]> {
+    const totalMembers = await this.contract.totalMembers();
+    this.cache.totalMembers = totalMembers;
+    const res: any[] = [];
+    for (let index = 1; index <= totalMembers; index++) {
+      const address = await this.contract.members(index - 1);
+      const votingPower = await this.contract.votingPower(address);
+      res.push({
+        index,
+        address,
+        votingPower,
+      });
+    }
+    this.cache.members = res;
+    return res;
   }
 
   async getPauser(): Promise<string> {
-    return await this.contract.pauser();
+    this.cache.pauser = await this.contract.pauser();
+    return this.cache.paused;
   }
 
-  async pauser(): Promise<boolean> {
-    return await this.contract.paused();
+  async getPaused(): Promise<boolean> {
+    this.cache.paused = await this.contract.paused();
+    return this.cache.paused;
   }
 
   async getProposals(): Promise<any> {
@@ -125,15 +139,13 @@ export class TeamDaoService {
   }
 
   async getQuorumPercentage(): Promise<number> {
-    const res: number = await this.contract.quorumPercentage();
-    this.cache.quorumPercentage = res;
-    return res;
+    this.cache.quorumPercentage = await this.contract.quorumPercentage();
+    return this.cache.quorumPercentage;
   }
 
-  async defaultVotingPower(): Promise<number> {
-    const res: number = await this.contract.defaultVotingPower();
-    this.cache.defaultVotingPower = res;
-    return res;
+  async getDefaultVotingPower(): Promise<number> {
+    this.cache.defaultVotingPower = await this.contract.defaultVotingPower();
+    return this.cache.defaultVotingPower;
   }
 
   proposalType(type: number): string {
@@ -156,19 +168,49 @@ export class TeamDaoService {
         return '';
     }
   }
+
+  async setEvents(): Promise<void> {
+    this.contract.on('SupportProposal', (from: string, to: string, name: string) => {
+      console.log(`Support from ${from} to ${to} for ${name}`);
+      this.getProposals();
+    });
+
+    this.contract.on('CreateProposal', (from: string, name: string) => {
+      console.log(`${from} proposes '${name}'`);
+      this.getProposals();
+    });
+
+    this.contract.on('ActivateProposal', (from: string, proposer: string, name: string, proposalType: number) => {
+      console.log(`${from} activates proposal '${name}' from ${proposer}`);
+      this.getAll();
+    });
+
+    this.contract.on('RemoveProposal', (from: string, name: string) => {
+      console.log(`${from} removed his proposal '${name}'`);
+      this.getProposals();
+    });
+
+    this.contract.on('Paused', (from: string) => {
+      console.log(`${from} paused the contract`);
+      this.cache.paused = true;
+    });
+
+    this.contract.on('Unpaused', (from: string) => {
+      console.log(`${from} unpaused the contract`);
+      this.cache.paused = false;
+    });
+
+  }
+
+  async getAll(): Promise<void> {
+    await Promise.all([
+      this.getPauser(),
+      this.getPaused(),
+      this.getMembers(),
+      this.getProposals(),
+      this.getDefaultVotingPower(),
+      this.getQuorumPercentage()
+    ]);
+  }
+
 }
-
-
-
-
-/*
-string memory name,
-VotingToken votingToken,
-ProposalType proposalType,
-address[] memory quorum,
-uint256 startTime,
-uint256 endTime,
-address payloadAddress,
-uint256 payloadNumber,
-bytes32[] memory votingOptions
-*/

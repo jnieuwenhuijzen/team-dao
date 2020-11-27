@@ -9,11 +9,11 @@
           <tr>
             <th scope="col" class="text-left">Member</th>
             <th scope="col" class="text-left">Type</th>
-            <th scope="col" class="text-center">Quorum {{quorumPercentage}}%</th>
+            <th scope="col" class="text-center">Quorum {{teamDaoService.cache.quorumPercentage}}%</th>
             <th scope="col" class="text-center"></th>
           </tr>
         </thead>
-        <tbody *ngFor='let proposal of proposals'>
+        <tbody *ngFor='let proposal of teamDaoService.cache.proposals'>
           <tr *ngIf='proposal.name'>
             <td class="text-left align-middle">{{metaMaskService.addressShort(proposal.address)}}</td>
             <td class="text-left align-middle">{{teamDaoService.proposalType(proposal.proposalType)}}</td>

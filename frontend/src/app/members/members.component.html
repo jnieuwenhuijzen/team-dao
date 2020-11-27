@@ -7,10 +7,10 @@
         <tr>
           <th scope="col" class="text-right">#</th>
           <th scope="col" class="text-left">Address</th>
-          <th scope="col" class="text-right">Voting Power (default {{defaultVotingPower}})</th>
+          <th scope="col" class="text-right">Voting Power (default {{teamDaoService.cache.defaultVotingPower}})</th>
         </tr>
       </thead>
-      <tbody *ngFor='let member of members'>
+      <tbody *ngFor='let member of teamDaoService.cache.members'>
         <tr>
           <th class="text-right" scope="row">{{member.index}}</th>
           <td class="text-left">{{member.address}}</td>

@@ -24,10 +24,30 @@
     </ul>
   </div>
 
+  <!-- Pause Button-->
+  <span *ngIf='metaMaskService.metaMaskInstalled && metaMaskService.address'>
+    <div *ngIf='!(teamDaoService.cache.pauser.toLowerCase() === metaMaskService.address) && teamDaoService.cache.paused'>
+      <button type="button" class="btn btn-sm btn-danger mr-3">
+        <b>PAUSED!</b>
+      </button>
+    </div>
+    <div *ngIf='teamDaoService.cache.pauser.toLowerCase() === metaMaskService.address && !teamDaoService.cache.paused'>
+      <button type="button" class="btn btn-sm btn-outline-danger mr-3" (click)='pause()'>
+        <b>PAUSE CONTRACT</b>
+      </button>
+    </div>
+    <div *ngIf='teamDaoService.cache.pauser.toLowerCase() === metaMaskService.address && teamDaoService.cache.paused'>
+      <button type="button" class="btn btn-sm btn-outline-success mr-3" (click)='unpause()'>
+        <b>UNPAUSE CONTRACT</b>
+      </button>
+    </div>
+  </span>
+
+  <!-- Metamask Address -->
   <div *ngIf='metaMaskService.metaMaskInstalled'>
     <div *ngIf='metaMaskService.address'>
       <button type="button" class="btn btn-sm btn-outline-warning">
-        <i>{{getAddressValue()}}</i>
+        <b>{{getAddressValue()}}</b>
       </button>
     </div>
     <div *ngIf='!metaMaskService.address'>

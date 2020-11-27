@@ -20,20 +20,6 @@ export class MembersComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     if (!this.teamDaoService.contractAddress) {
       this.router.navigateByUrl('/landing', { replaceUrl: true });
-    } else {
-      try {
-        [this.members, this.defaultVotingPower] = await Promise.all([
-          this.teamDaoService.getMembers(),
-          this.teamDaoService.defaultVotingPower()
-        ]);
-      } catch (err) {
-        this.teamDaoService.setContract('');
-        this.router.navigateByUrl('/landing', { replaceUrl: true });
-        alert('Cannot read contract');
-        throw (err);
-      }
     }
   }
-
-
 }

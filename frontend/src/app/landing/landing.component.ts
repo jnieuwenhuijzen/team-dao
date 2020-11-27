@@ -19,8 +19,8 @@ export class LandingComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  joinTeam(): void {
-    this.teamDaoService.setContract(this.contractAddress);
+  async joinTeam(): Promise<void> {
+    await this.teamDaoService.setContract(this.contractAddress);
     this.router.navigateByUrl('/members', { replaceUrl: true });
   }
 

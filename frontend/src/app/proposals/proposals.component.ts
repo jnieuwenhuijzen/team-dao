@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { MetaMaskService } from '../services/metamask.service';
 import { TeamDaoService } from '../services/team-dao.service';
 import { Router } from '@angular/router';
-import { Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-proposals',
@@ -10,13 +9,17 @@ import { Meta } from '@angular/platform-browser';
   styleUrls: ['./proposals.component.css']
 })
 export class ProposalsComponent implements OnInit {
-  proposals: any[] = [];
-  quorumPercentage = 0;
-  totalMembers = 0;
   createProposalType = -1;
   inputAddress = '';
   inputNumber = undefined;
-  details: any = {};
+  detailsIdx = '';
+  details = {
+    address: '',
+    proposalType: 0,
+    payloadAddress: '',
+    payloadNumber: 0,
+    quorum: []
+  };
 
   constructor(
     public metaMaskService: MetaMaskService,
@@ -26,33 +29,27 @@ export class ProposalsComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     if (!this.teamDaoService.contractAddress) {
       this.router.navigateByUrl('/landing', { replaceUrl: true });
-    } else {
-      try {
-        [this.proposals, this.quorumPercentage, this.totalMembers] = await Promise.all([
-          this.teamDaoService.getProposals(),
-          this.teamDaoService.getQuorumPercentage(),
-          this.teamDaoService.totalMembers()
-        ]);
-      } catch (err) {
-        console.log(err);
-        this.teamDaoService.setContract('');
-        this.router.navigateByUrl('/landing', { replaceUrl: true });
-        alert('Error reading contract');
-      }
     }
   }
 
   setDetails(proposal: any): void {
-    this.details = proposal;
+    for (const idx in this.teamDaoService.cache.proposals) {
+      if (this.teamDaoService.cache.proposals[idx].address === proposal.address) {
+        this.detailsIdx = idx;
+      }
+    }
+    this.details = this.teamDaoService.cache.proposals[this.detailsIdx];
   }
 
   getQuorum(proposal: any): string {
-    return `${proposal.quorum.length} / ${this.totalMembers}`;
+    return `${proposal.quorum.length} / ${this.teamDaoService.cache.totalMembers}`;
     // return `${Math.floor(proposal.quorum.length / this.totalMembers * 100)}%`;
   }
 
   getQuorumReach(proposal: any): number {
-    return Math.floor(proposal.quorum.length / this.totalMembers * 100 * 100 / this.quorumPercentage);
+    return Math.floor(proposal.quorum.length /
+      this.teamDaoService.cache.totalMembers * 100 * 100 /
+      this.teamDaoService.cache.quorumPercentage);
   }
 
   setProposalType(type: number): void {
