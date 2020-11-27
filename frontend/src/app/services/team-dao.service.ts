@@ -38,6 +38,7 @@ export class TeamDaoService {
     if (address === '') {
       this.contract = undefined;
       this.contractAddress = address;
+      this.cache = {};
     } else {
       this.contract = new ethers.Contract(address, teamDaoAbi, this.signer);
       this.contractAddress = address;

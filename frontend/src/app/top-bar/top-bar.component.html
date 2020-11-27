@@ -25,7 +25,7 @@
   </div>
 
   <!-- Pause Button-->
-  <span *ngIf='metaMaskService.metaMaskInstalled && metaMaskService.address'>
+  <span *ngIf='metaMaskService.metaMaskInstalled && metaMaskService.address && teamDaoService.cache.pauser'>
     <div *ngIf='!(teamDaoService.cache.pauser.toLowerCase() === metaMaskService.address) && teamDaoService.cache.paused'>
       <button type="button" class="btn btn-sm btn-danger mr-3">
         <b>PAUSED!</b>
