@@ -122,7 +122,7 @@ The following proposals are not yet fully implemented:
   - Build a form for composing a multiple-choice question. This can be used as input for the 'Vote' proposal
   - Build a display where the active votes (the multiple choice questions) are shown. Users of the interface should be able to express their support for each of the options by transferring an amount of the specific voting token to one or more of the voting option addresses.
   - Build a display where the results of all closed votes are still visible.
-- **Transfer**: It seems straightforward to extend the functionality with a 'Transfer' proposal, where ERC20 tokens that are owned by the TeamDAO contract can be sent to other addresses. This way the TeamDAO can also be used to store and manage value. ERC20 token interface should allow for handling both fungible and non-fungible tokens. Next to that it might be optional to also allow for transferring Ether, but it might be easier (maybe even safer, less attack vectors?) to only accept Ether in ERC20 format (wETH).
+- **Transfer**: It seems straightforward to extend the functionality with a 'Transfer' proposal, where ERC20 tokens that are owned by the TeamDAO contract can be sent to other addresses. This way the TeamDAO can also be used to store and manage value. ERC20 token interface should allow for handling both fungible and non-fungible tokens. Next to that it might be optional to also allow for transferring Ether, but it might be easier (and with less attack vectors?) to only accept Ether in ERC20 format (wETH).
 
 ## License
 
