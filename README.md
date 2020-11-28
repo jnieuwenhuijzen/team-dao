@@ -31,7 +31,7 @@ The project is created with:
 
 ## Setup
 
-To run this project, the following packages are required to be installed (version above advised, but other version might work):
+To run this project, the following packages are required (versions stated above are advised, but other version might work):
 
 - npm / nodejs
 - truffle (installed globally with `npm i -g truffle`)
