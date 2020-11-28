@@ -12,9 +12,9 @@
 
 ## General info
 
-TeamDAO is a DAO contract that allows teams of any size to manage their teams' composition and member voting power through a fixed number of proposals. The proposals can be adopted by means of quorum majority of the members of the team. 
+TeamDAO is a DAO contract that teams of any size can use to manage the team composition and member voting power through a number of proposals. The proposals will be adopted when quorum majority among the team members is achieved. 
  
-Members can also propose on self created multiple-choice questions, each team question governed with a unique time-constrained and ERC20 compliant voting token. For each vote a new set of tokens is created and distributed among the team members. Members will be able to cast their votes by timely sending token amounts to the address(es) of choice. 
+Members can also propose on self created multiple-choice questionaires, where each questionaire is governed with a unique time-constrained and ERC20 compliant voting token. For each vote a new set of tokens is created and distributed among the team members. Members will be able to cast their votes by simply sending token amounts to the voting address(es) of choice. 
 
 *Todo: The GUI for creating/sending/showing votes is not implemented yet*
 
