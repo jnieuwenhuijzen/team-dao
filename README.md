@@ -5,7 +5,7 @@
 * [General info](#general-info)
 * [Technologies](#technologies)
 * [Setup](#setup)
-* [Features and Status](#features-and-status)
+* [Features](#features)
 * [Status](#status)
 * [Inspiration](#inspiration)
 * [Contact](#contact)
@@ -89,16 +89,42 @@ npm run start
 
 You can now visit the local URL *http://localhost:4200*. Be sure to have MetaMask installed to make full use of the TeamDAO.
 
-## Features and Status
+## Features
 
-The following proposals are fully implemented:
+To start a TeamDAO interface you have two options:
+
+- **Join an existing team**: If your TeamDAO allready exist you can (re)join it by entering the smart contract address from the TeamDAO.
+- **Create a new team**: If you want to create a new TeamDAO, you can simply press the button and a new contract will be deployed. As creator of this team you will be the first team member and you will be assigned the pause functionality. As the sole member of the team, you will initially always reach quorum for a proposal. This will change once you add a new member. The quorum percentage is initialized to 60%.
+
+The interface further provides for ..
+
+- .. the pauser to **pause** or **unpause** the contract in case of emergency
+- .. a team member to **add a proposal**
+- .. a team member to **remove its own proposal**
+- .. a team member to **support another team member's proposal**
+- .. a team member to **activate a proposal** (This normally happens automically, but not in the case that majority is reached through a decrease of quorum percentage or removal of a team member)
+- .. everyone to **view the details of a proposal**
+
+Each member can make one proposal at the time. The following proposals are currently available:
 
 - **Add Member**: Add new member to the team.
 - **Remove Member**: Remove a member from the team.
 - **Set Quorum Percentage**: Set the percentage of supporting team members to have a proposal activated.
-- **Set Pauser**: To freeze the contract in case of emergency, one address can be assigned the pause functionality. This address does not have to be from a member of the team.
+- **Set Pauser**: To freeze the contract in case of emergency, one address can be assigned the pause functionality. This address does not have to be from a member of the team. Initially it will be the creator/first team member of the TeamDAO. If the team does not want to use the pause functionality, it can be set to address(0).
+- **Set Individual Voting Power**: The amount of voting tokens that will be assigned per vote to an individual team member.
+- **Set Default Voting Power**: The default amount of voting tokens. This value is used to initialize the individual voting power for a new team member.
 
-## Inspiration
+## Status
 
-## Contact
+The following proposals are not yet fully implemented:
+
+- **Vote**: The idea is to vote with an ERC20 token. The intended use is that for each vote a new voting token is created and distributed among the team members. This token can be transferred freely to everyone, but constrained to a predetermined time frame. Once out of this time frame, the tokens will be frozen and the vote is final. Voting will be done with a multiple choice type of questionaire, where each voting option will be assigned a unique random address. This random address is created by the teamDao contract. The amount of tokens a voting address receives stands for the support that has been given to this voting option. The VotingToken contract has already been implemented and tested. What still needs to be built is the interface/GUI, specifically:
+  - Build a form for composing a multiple-choice question. This can be used as input for the 'Vote' proposal
+  - Build a display where the active votes (the multiple choice questions) are shown. Users of the interface should be able to express their support for each of the options by transferring an amount of the specific voting token to one or more of the voting option addresses.
+  - Build a display where the results of all closed votes are still visible.
+- **Transfer**: It seems straightforward to extend the functionality with a 'Transfer' proposal, where ERC20 tokens that are owned by the TeamDAO contract can be sent to other addresses. This way the TeamDAO can also be used to store and manage value. ERC20 token interface should allow for handling both fungible and non-fungible tokens. Next to that it might be optional to also allow for transferring Ether, but it might be easier (maybe even safer, less attack vectors?) to only accept Ether in ERC20 format (wETH).
+
+## License
+
+MIT License (including **all** dependencies).
 
