@@ -44,7 +44,6 @@ export class MetaMaskService {
 
   // Force open MetaMask
   async connect(): Promise<void> {
-    console.log('bneen here')
     this.address = (await this.ethereum.request({ method: 'eth_requestAccounts' }))[0];
   }
 
