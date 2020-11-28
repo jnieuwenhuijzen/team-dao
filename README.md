@@ -38,7 +38,7 @@ To run this project, the following packages are required (versions as stated abo
 - ganache-cli (installed globally with `npm i -g ganache-cli`)
 - MetaMask (as extension in your browser)
 
-The project is divided in a frontend and backend (team-dao) part. To setup each part, follow these steps: 
+The project is divided in a frontend and backend (team-dao). To setup each part, follow these steps: 
 
 Clone the project from github to a local directory. Enter the directory and then:
 
