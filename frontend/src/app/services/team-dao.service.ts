@@ -20,10 +20,15 @@ export class TeamDaoService {
     members: []
   };
 
-  provider = new ethers.providers.Web3Provider(this.metaMaskService.ethereum);
-  signer = this.provider.getSigner();
+  provider: any;
+  signer: any;
 
-  constructor(private metaMaskService: MetaMaskService) { }
+  constructor(private metaMaskService: MetaMaskService) {
+    if (this.metaMaskService.ethereum) {
+      this.provider = new ethers.providers.Web3Provider(this.metaMaskService.ethereum);
+      this.signer = this.provider.getSigner();
+    }
+   }
 
   async deployTeamDao(): Promise<any> {
     const contractFactory = new ethers.ContractFactory(teamDaoAbi, teamDaoBytecode, this.signer);
