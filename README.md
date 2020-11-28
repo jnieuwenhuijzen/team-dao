@@ -5,7 +5,7 @@
 * [General info](#general-info)
 * [Technologies](#technologies)
 * [Setup](#setup)
-* [Features](#features)
+* [Features and Status](#features-and-status)
 * [Status](#status)
 * [Inspiration](#inspiration)
 * [Contact](#contact)
@@ -14,7 +14,7 @@
 
 TeamDAO is a DAO contract that allows teams of any size to manage their teams' composition and member voting power through a fixed number of proposals. The proposals can be adopted by means of quorum majority of the members of the team. 
  
-Members can also propose on self created multiple-choice questions, each team question governed with a unique time-constrained and ERC20 compliant voting token. For each vote a new set of tokens is created and distributed among the team members. Members will be able to cast their vote by timely sending amount of tokens to the address(es) of choice. 
+Members can also propose on self created multiple-choice questions, each team question governed with a unique time-constrained and ERC20 compliant voting token. For each vote a new set of tokens is created and distributed among the team members. Members will be able to cast their votes by timely sending token amounts to the address(es) of choice. 
 
 *Todo: The GUI for creating/sending/showing votes is not implemented yet*
 
@@ -58,13 +58,13 @@ Optionally if you want to test the contracts, start ganache in a separate termin
 ganache-cli
 ```
 
-Start the tests in the earlier terminal as follows:
+Start the tests in another terminal as follows:
 
 ```
 truffle test
 ```
 
-If you want to use a fixed mnemonic later on in the frontend, place the mnemonic 12 words in a file `.mnemonic` in this directory. This is not mandatory but for convenience if you want to test with Metamask.
+If you want to use a fixed mnemonic later on in the frontend, place the mnemonic 12 words in a file `.mnemonic` in the current directory. This is not mandatory but for convenience if you want to test locally with Metamask.
 
 ### frontend
 
@@ -75,24 +75,28 @@ cd ../frontend/
 npm i
 ```
 
-If you want to use local ganache as blockchain and you want to run ganache-cli with the mnemonic mentioned earlier, stop the previous ganache-cli and start it up with the following convenience script:
+If you want to use a local ganache as blockchain and run ganache-cli with the mnemonic mentioned earlier, stop the previous ganache-cli and start it up with the following script:
 
 ```
 npm run ganache
 ```
 
-start the development server for serving the frontend as follows:
+start the development server for serving the frontend:
 
 ```
 npm run start
 ``` 
 
-You can now visit the local URL *http://localhost:4200*. Make sure that MetaMask is installed to be able to make fully use of the TeamDAO.
+You can now visit the local URL *http://localhost:4200*. Be sure to have MetaMask installed to make full use of the TeamDAO.
 
+## Features and Status
 
-## Features
+The following proposals are fully implemented:
 
-## Status
+- **Add Member**: Add new member to the team.
+- **Remove Member**: Remove a member from the team.
+- **Set Quorum Percentage**: Set the percentage of supporting team members to have a proposal activated.
+- **Set Pauser**: To freeze the contract in case of emergency, one address can be assigned the pause functionality. This address does not have to be from a member of the team.
 
 ## Inspiration
 
