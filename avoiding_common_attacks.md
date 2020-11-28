@@ -2,17 +2,15 @@
 
 This document explains the security steps and measures taken to ensure the `TeamDao` and `VotingToken` contract are not suceptible to common attacks.
 
-## Re-entracy Attacks (SWC-107)
+## Re-entrancy Attacks (SWC-107)
 
-The TeamDao contract creates and calls functions from the VotingToken contract. Specifically, as the owner of the VotingToken it will mint tokens for each member. As the final step it will renounce ownership.
+Re-entrancy becomes possible when the contract makes calls to another contract. In case of the TeamDAO, the contract calls functions only from the VotingToken contract. Specifically, as the owner and creator of the VotingToken it will mint tokens for each member.
 
-The TeamDao contract (the owner of the new VotingToken) can only access the VotingToken functions through the internal function `CreateVote` in which the token is created, minted and ownership-renounced. 
-
-The VotingToken contract (which is owned bij the TeamDao contract) has an extra prerequisite: Tokens can only be transferred or minted when ownership is renounced. This makes it less likely to be susceptible for re-entrancy.
+The VotingToken contract has an extra prerequisite: Tokens can only be transferred or minted when ownership is renounced. This makes it less likely to be susceptible for re-entrancy. so once it has been created and activated, the TeamDAO contract can no longer influence the VotingToken contract.
 
 ## Transaction Ordering and Timestamp Dependence (SWC-114)
 
-Although with voting privacy should be an issue (but not taken into consideration in the current setup), the result can not be changed with transaction ordering.
+The result can not be changed with transaction ordering.
 
 ## Integer Overflow and Underflow (SWC-101)
 
@@ -20,7 +18,7 @@ All contracts make use of the SafeMath implementation from Openzeppelin where ne
 
 ## Denial of Service with Failed Call (SWC-113)
 
-As the TeamDao and VotingToken contract do not call other contracts, it seems impossible to create a 'DoS with Failed Call'.
+TeamDao and VotingToken contracts do not call other contracts, which make it less susceptible to this kind of attack. 
 
 ## Denial of Service by Block Gas Limit or startGas (SWC-128)
 
