@@ -25,16 +25,16 @@ TeamDao and VotingToken contracts do not call other contracts, which make it les
 There are some arrays with undetermined size used in 
 the TeamDao contract. Two arrays are used in the `proposal` struct:
 
- -  `quorum[]`: This part of a proposal is filled using the function `supportProposal`. There is a prerequisite in this function that requires that `msg.sender` is not allready an occurence in the array. 
- -  `votingoptions[]`: This array is created with the creation of the proposal and only by the proposer itself. It can therefor not be used to DoS other proposals than the creation of the proposal itself.
+ -  `quorum[]`: This part of a proposal is filled using the function `supportProposal`. There is a prerequisite in this function that requires that `msg.sender` is not already an occurence in the array. 
+ -  `votingoptions[]`: This array is created on creation of the proposal by the proposer. It cannot be used to DoS other proposals.
 
-The `WithMembers` library/contract is derived by `TeamDao`. it contains an array `member[]` of undetermined size. The requirement in `_addMember` is that it may not allready be a member. Next to that, Members can only be added if the majority (the quorum) of team members agree.
+The `WithMembers` library/contract is derived by `TeamDao`. it contains an array `member[]` of undetermined size. The requirement in `_addMember` is that it may not already be a member. Also, members can only be added if the majority (the quorum) of team members agree.
 
 ## Force Sending Ether
 
-Although not currently implemented, a future use of the contract could be to manage with the TeamDao transfers of ETH or ERC20 tokens owned by the TeamDao contract.
+Currently implemented, but a future use of the contract could be to propose transfers of ERC20 or Ether tokens.
 
-There would however not be any logic *dependent* on the amount of tokens available to the contract, except for the availability of tokens at time of transfer.
+In that case there would not be logic *dependending* on the amount of tokens available to the contract, except for the availability of tokens at time of transfer.
 
 Self destruct pattern is not implemented in this contract.
 
