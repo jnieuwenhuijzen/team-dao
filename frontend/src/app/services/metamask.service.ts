@@ -29,12 +29,12 @@ export class MetaMaskService {
       if (this.changeOutsideZone) { this.changeOutsideZone = false; }
     }, 500);
 
-    window.ethereum.on('chainChanged', () => {
+    this.ethereum.on('chainChanged', () => {
       this.setNetwork();
       this.changeOutsideZone = true;
     });
 
-    window.ethereum.on('accountsChanged', (accounts: string[]) => {
+    this.ethereum.on('accountsChanged', (accounts: string[]) => {
       this.address = accounts[0];
       this.setNetwork();
       this.changeOutsideZone = true;
@@ -44,7 +44,8 @@ export class MetaMaskService {
 
   // Force open MetaMask
   async connect(): Promise<void> {
-    this.address = (await window.ethereum.request({ method: 'eth_requestAccounts' }))[0];
+    console.log('bneen here')
+    this.address = (await this.ethereum.request({ method: 'eth_requestAccounts' }))[0];
   }
 
   // Return address in short format
@@ -54,7 +55,7 @@ export class MetaMaskService {
 
   // Translate network name according to chainId
   private setNetwork(): void {
-    switch (window.ethereum.chainId) {
+    switch (this.ethereum.chainId) {
       case '0x1':
         this.network = 'Mainnet';
         break;
