@@ -32,9 +32,9 @@ The `WithMembers` library/contract is derived by `TeamDao`. it contains an array
 
 ## Force Sending Ether
 
-Currently implemented, but a future use of the contract could be to propose transfers of ERC20 or Ether tokens.
+Not currently implemented, but a future use of the contract could be to propose and allow transfers of ERC20 and/or Ether tokens.
 
-In that case there would not be logic *dependending* on the amount of tokens available to the contract, except for the availability of tokens at time of transfer.
+There would not be logic *dependending* on the amount of tokens available to the contract, except for the amount of available tokens.
 
 Self destruct pattern is not implemented in this contract.
 
