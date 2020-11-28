@@ -93,8 +93,8 @@ You can now visit the local URL *http://localhost:4200*. Be sure to have MetaMas
 
 To start a TeamDAO interface you have two options:
 
-- **Join an existing team**: If your TeamDAO allready exist you can (re)join it by entering the smart contract address from the TeamDAO.
-- **Create a new team**: If you want to create a new TeamDAO, you can simply press the button and a new contract will be deployed. As creator of this team you will be the first team member and you will be assigned the pause functionality. As the sole member of the team, you will initially always reach quorum for a proposal. This will change once you add a new member. The quorum percentage is initialized to 60%.
+- **Join an existing team**: If your TeamDAO already exist you can (re)join it by entering the smart contract address from the TeamDAO.
+- **Create a new team**: If you want to create a new TeamDAO, you can simply press the create button on the landing page and a new contract will be deployed. As creator of this team you will be the first team member and you will be assigned the pause functionality. As the sole member of the team, you will initially always reach quorum for a proposal. Note that this will change once you add the first new member. The quorum percentage is initialized to 60%.
 
 The interface further provides for ..
 
@@ -122,6 +122,7 @@ The following proposals are not yet fully implemented:
   - Build a form for composing a multiple-choice question. This can be used as input for the 'Vote' proposal
   - Build a display where the active votes (the multiple choice questions) are shown. Users of the interface should be able to express their support for each of the options by transferring an amount of the specific voting token to one or more of the voting option addresses.
   - Build a display where the results of all closed votes are still visible.
+  - Setup for an IPFS interface. The stored information on the chain for each option currently consists of a bytes[32] array. IPFS officially requires 2 extra prefix bytes 0x1220, these have not yet been taken into account and might need improvement in the VotingToken contract.
 - **Transfer**: It seems straightforward to extend the functionality with a 'Transfer' proposal, where ERC20 tokens that are owned by the TeamDAO contract can be sent to other addresses. This way the TeamDAO can also be used to store and manage value. ERC20 token interface should allow for handling both fungible and non-fungible tokens. Next to that it might be optional to also allow for transferring Ether, but it might be easier (and with less attack vectors?) to only accept Ether in ERC20 format (wETH).
 
 ## License
