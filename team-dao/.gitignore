@@ -1,4 +1,4 @@
 build/*
 dist/*
-.mnemonic
 ngrok/*
+.mnemonic
