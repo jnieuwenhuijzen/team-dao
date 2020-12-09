@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "npx ng",
     "start": "npx ng serve",
+    "demo": "npx ng build --prod && npx ng serve --host 0.0.0.0 --disable-host-check --prod",
     "build": "npx ng build",
     "test": "npx ng test",
     "lint": "npx ng lint",
